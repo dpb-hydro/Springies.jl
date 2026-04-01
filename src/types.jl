@@ -57,9 +57,22 @@ abstract type Accelerator end
 
 Type for 1D accelerators.
 """
-struct Accelerator1D{OT<:Oscillator1D} <: Accelerator
+struct Accelerator1D{OT<:Oscillator1D,Dim} <: Accelerator
     oscillator::OT
     force_field::ForceField
+
+    function Accelerator1D{OT,Dim}(
+        oscillator::OT, force_field::ForceField
+    ) where {OT<:Oscillator1D,Dim}
+        Dim in (:x, :y, :z) || throw(ArgumentError("Dim must be :x, :y, or :z, got :$Dim"))
+        new{OT,Dim}(oscillator, force_field)
+    end
+end
+
+function Accelerator1D(
+    oscillator::OT, force_field::ForceField, dim::Symbol
+) where {OT<:Oscillator1D}
+    Accelerator1D{OT,dim}(oscillator, force_field)
 end
 
 """
@@ -67,12 +80,12 @@ end
 
 Construct an empty Accelerator1D object.
 """
-function Accelerator1D()
-    Accelerator1D(EmptyOscillator(Float64), ZeroForce(Float64))
+function Accelerator1D(dim::Symbol)
+    Accelerator1D(EmptyOscillator(Float64), ZeroForce(Float64), dim)
 end
 
 function (a::Accelerator1D{<:EmptyOscillator})(
-    x::FT, y::FT, z::FT, dx::FT, dy::FT, dz::FT, t::FT
+    x::FT, dx::FT, y::FT, dy::FT, z::FT, dz::FT, t::FT
 ) where {FT<:AbstractFloat}
     return zero(FT)
 end
@@ -83,9 +96,9 @@ end
 Type to store three `Accelerator1D` objects, one for each dimension `x`, `y`, `z`.
 """
 struct Accelerator3D
-    x::Accelerator1D
-    y::Accelerator1D
-    z::Accelerator1D
+    x::Accelerator1D{<:Oscillator1D,:x}
+    y::Accelerator1D{<:Oscillator1D,:y}
+    z::Accelerator1D{<:Oscillator1D,:z}
 end
 
 """
@@ -94,9 +107,9 @@ end
 Constructor for Accelerator3D with default empty fields.
 """
 function Accelerator3D(;
-    x::Accelerator1D=Accelerator1D(),
-    y::Accelerator1D=Accelerator1D(),
-    z::Accelerator1D=Accelerator1D(),
+    x::Accelerator1D=Accelerator1D(:x),
+    y::Accelerator1D=Accelerator1D(:y),
+    z::Accelerator1D=Accelerator1D(:z),
 )
     Accelerator3D(x, y, z)
 end
