@@ -21,7 +21,7 @@ Nt = 401
 t = range(tspan...; length=Nt)
 
 # Initial conditions [x, dx, y, dy, z, dz]
-u0 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+u0 = [-10*pi/180.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 # Animation settings
 savepath = joinpath(@__DIR__, "pendulum.gif")
