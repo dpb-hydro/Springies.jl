@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: julia-format
+        name: Julia Format
+        language: system
+        entry: julia --startup-file=no scripts/format_check.jl
+        files: '\.jl$'
+        pass_filenames: false
