@@ -2,6 +2,7 @@ using CairoMakie
 using Printf
 using CairoMakie
 include("src/Oscillations.jl")
+include("my_types.jl")
 
 m = 10.0
 c = 0.7

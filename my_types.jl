@@ -1,9 +1,14 @@
-@inline function _get_coord(dim::Symbol, x, dx, y, dy, z, dz)
-    dim === :x && return x, dx
-    dim === :y && return y, dy
-    dim === :z && return z, dz
-    throw(ArgumentError("Unknown dimension: $dim"))
+"""
+    CosineForce{FT<:AbstractFloat} <: ForceField{FT}
+
+One-dimensional cosine force.
+"""
+struct CosineForce{FT<:AbstractFloat} <: ForceField{FT}
+    F0::FT
+    omega::FT
 end
+
+(f::CosineForce)(x, y, z, t) = f.F0 * cos(f.omega * t)
 
 """
     Pendulum1D{FT} <: Oscillator1D{FT}
@@ -35,7 +40,7 @@ end
 function (a::Accelerator1D{<:Pendulum1D,Dim})(
     x::FT, dx::FT, y::FT, dy::FT, z::FT, dz::FT, t::FT
 ) where {FT<:AbstractFloat,Dim}
-    q, dq = _get_coord(Dim, x, dx, y, dy, z, dz)
+    q, dq = get_coord(Dim, x, dx, y, dy, z, dz)
     return (a.force_field(x, y, z, t) / a.oscillator.mL) - a.oscillator.c_over_m * dq -
            a.oscillator.g_over_L * sin(q)
 end

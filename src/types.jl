@@ -120,3 +120,10 @@ end
 Return Oscillator1D type `OT` used by an `Accelerator1D` object.
 """
 Base.eltype(::Accelerator1D{OT}) where {OT} = OT
+
+function get_coord(dim::Symbol, x, dx, y, dy, z, dz)
+    dim === :x && return x, dx
+    dim === :y && return y, dy
+    dim === :z && return z, dz
+    throw(ArgumentError("Unknown dimension: $dim"))
+end
