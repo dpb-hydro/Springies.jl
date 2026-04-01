@@ -3,7 +3,17 @@ uuid = "d048b940-0680-441a-9591-1e31bc499d31"
 authors = ["dpb-hydro <daniel.bartley@hotmail.co.uk> and contributors"]
 version = "1.0.0-DEV"
 
+[deps]
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
 [compat]
+CairoMakie = "0.15.9"
+OrdinaryDiffEq = "6.109.0"
+Printf = "1.11.0"
+StaticArrays = "1.9.18"
 julia = "1.11"
 
 [extras]
