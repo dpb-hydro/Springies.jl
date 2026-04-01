@@ -1,0 +1,22 @@
+name = "DoubleGyre"
+uuid = "2785b43b-cb38-437a-b601-88952369f6b9"
+authors = ["dpb-hydro <daniel.bartley@hotmail.co.uk> and contributors"]
+version = "1.0.0-DEV"
+
+[deps]
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+
+[compat]
+CairoMakie = "0.15"
+ForwardDiff = "1.3"
+OrdinaryDiffEq = "6.108"
+julia = "1.11"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
