@@ -63,6 +63,15 @@ struct Accelerator1D{OT<:Oscillator1D} <: Accelerator
 end
 
 """
+    Accelerator1D()
+
+Construct an empty Accelerator1D object.
+"""
+function Accelerator1D()
+    Accelerator1D(EmptyOscillator(Float64), ZeroForce(Float64))
+end
+
+"""
     eltype(::Accelerator1D{OT}) where {OT}
 
 Return Oscillator1D type `OT` used by an `Accelerator1D` object.

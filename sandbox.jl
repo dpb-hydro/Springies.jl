@@ -2,6 +2,7 @@ using CairoMakie
 using Printf
 using CairoMakie
 include("src/Oscillations.jl")
+include("src/examples.jl")
 
 m = 0.001
 c = 1.0
@@ -14,7 +15,7 @@ F0 = 10.0
 tspan = (0.0, T * 15)
 Nt = 401
 
-pend = osc.Pendulum1D(; m=m, c=c, L=L)
+pend = Pendulum1D(; m=m, c=c, L=L)
 force = osc.CosineForce(F0, omega)
 a = osc.EmptyOscillator(Float64)
 

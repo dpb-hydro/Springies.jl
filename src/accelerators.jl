@@ -1,8 +1,4 @@
 
-function Accelerator1D()
-    Accelerator1D(EmptyOscillator(Float64), ZeroForce(Float64))
-end
-
 """
     Oscillator3D{FT<:AbstractFloat}
 
