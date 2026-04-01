@@ -1,7 +1,9 @@
 using CairoMakie
 using Printf
 using CairoMakie
-include("src/Oscillations.jl")
+
+using Oscillations
+
 include("my_types.jl")
 
 m = 10.0
@@ -17,13 +19,13 @@ Nt = 401
 
 u0 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
-pend_x = osc.Pendulum1D(; m=m, c=c, L=L)
-F_x = osc.CosineForce(F0, omega)
-accn_x = osc.Accelerator1D(pend_x, F_x, :y)
+pend_x = Pendulum1D(; m=m, c=c, L=L)
+F_x = CosineForce(F0, omega)
+accn_x = Accelerator1D(pend_x, F_x, :x)
 
-accn = osc.Accelerator3D(; x=accn_x)
+accn = Accelerator3D(; x=accn_x)
 
-u_solved = osc.ode_numerical(accn, tspan, u0, Nt)
+u_solved = ode_numerical(accn, tspan, u0, Nt)
 x = [u[1] for u in u_solved]
 
 fig = Figure(; size=(1200, 600))
