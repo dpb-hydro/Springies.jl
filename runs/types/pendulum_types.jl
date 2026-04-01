@@ -23,3 +23,9 @@ function (a::Accelerator1D{<:Pendulum1D,Dim})(
     return (a.force_field(x, y, z, t) / a.oscillator.mL) - a.oscillator.c_over_m * dq -
            a.oscillator.g_over_L * sin(q)
 end
+
+struct CosineForce{FT<:AbstractFloat} <: ForceField{FT}
+    F0::FT
+    omega::FT
+end
+(f::CosineForce)(x, y, z, t) = f.F0 * cos(f.omega * t)

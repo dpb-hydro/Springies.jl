@@ -2,43 +2,53 @@ using Oscillations
 using CairoMakie
 using Printf
 
+# Types holding pendulum settings and applied force
 include("types/pendulum_types.jl")
 
-struct CosineForce{FT<:AbstractFloat} <: ForceField{FT}
-    F0::FT
-    omega::FT
-end
-(f::CosineForce)(x, y, z, t) = f.F0 * cos(f.omega * t)
-
+# Pendulum settings
 m = 10.0
 c = 0.7
 L = 5.0
 
+# Applied force settings
+F0 = 10.0
 T = 10.0
 omega = 2 * pi / T
-F0 = 10.0
 
+# Time settings
 tspan = (0.0, T * 15)
 Nt = 401
+t = range(tspan...; length=Nt)
 
-savepath = joinpath(@__DIR__, "my_movie.gif")
-fps = 10
-
+# Initial conditions [x, dx, y, dy, z, dz]
 u0 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
+# Animation settings
+savepath = joinpath(@__DIR__, "pendulum.gif")
+fps = 10
+
+# Create accelerator object
 pend_x = Pendulum1D(; m=m, c=c, L=L)
 F_x = CosineForce(F0, omega)
 accn_x = Accelerator1D(pend_x, F_x, :x)
-
 accn = Accelerator3D(; x=accn_x)
 
+# Solve ODEs
 u_solved = ode_numerical(accn, tspan, u0, Nt)
 theta_num = [u[1] for u in u_solved]
 
-theta_long = copy(theta_num) #dummy
+# Analytical solution (using nondimensionalisation)
+omega0 = sqrt(9.81 / L)
+t_ND = t .* omega0
+alpha = c / (m * omega0)
+beta = omega / omega0
+gamma = F0 / (m * L * omega0^2)
+A = 1 / sqrt((1 - beta^2)^2 + alpha^2 * beta^2)
+phi = atan(-alpha * beta, (1 - beta^2))
+theta_ND = A .* cos.(beta .* t_ND .+ phi)
+theta_long = theta_ND .* gamma
 
-t = range(tspan...; length=Nt)
-
+# Animate
 xs = L .* sin.(theta_num)
 ys = L .- L .* cos.(theta_num)
 F = F0 .* cos.(omega .* t)
