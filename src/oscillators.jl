@@ -25,6 +25,13 @@ function Pendulum1D(; m::T, c::T, L::T, g::AbstractFloat=9.81) where {T<:Abstrac
     Pendulum1D(m, c, L, T(g))
 end
 
+function (a::Accelerator1D{<:Pendulum1D})(
+    x::FT, y::FT, z::FT, dx::FT, dy::FT, dz::FT, t::FT
+) where {FT<:AbstractFloat}
+    return (a.force_field(x, y, z, t) / a.oscillator.mL) - a.oscillator.c_over_m * dx -
+           a.oscillator.g_over_L * sin(x)
+end
+
 """
     Spring1D{FT} <: Oscillator1D{FT}
 

@@ -71,6 +71,12 @@ function Accelerator1D()
     Accelerator1D(EmptyOscillator(Float64), ZeroForce(Float64))
 end
 
+function (a::Accelerator1D{<:EmptyOscillator})(
+    x::FT, y::FT, z::FT, dx::FT, dy::FT, dz::FT, t::FT
+) where {FT<:AbstractFloat}
+    return zero(FT)
+end
+
 """
     Accelerator3D
 

@@ -2,7 +2,6 @@ using CairoMakie
 using Printf
 using CairoMakie
 include("src/Oscillations.jl")
-include("src/examples.jl")
 
 m = 0.001
 c = 1.0
@@ -15,14 +14,15 @@ F0 = 10.0
 tspan = (0.0, T * 15)
 Nt = 401
 
-pend = Pendulum1D(; m=m, c=c, L=L)
-force = osc.CosineForce(F0, omega)
-a = osc.EmptyOscillator(Float64)
+pend_x = osc.Pendulum1D(; m=m, c=c, L=L)
+F_x = osc.CosineForce(F0, omega)
+accn_x = osc.Accelerator1D(pend_x, F_x)
 
-a1 = osc.Accelerator1D(pend, force)
-accn = osc.Accelerator3D(; x=a1, y=a1)
+accn = osc.Accelerator3D(; x=accn_x)
 
-u0 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+# a1 = osc.Accelerator1D(pend, force)
+
+# u0 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 # F = (xyz, t) -> Oscillations.cosine_x(xyz, t, F0, omega)
 
