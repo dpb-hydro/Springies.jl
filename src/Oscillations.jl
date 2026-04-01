@@ -1,5 +1,8 @@
 module Oscillations
 
-# Write your package code here.
+include("types.jl")
 
 end
+
+using .Oscillations
+osc = Oscillations
