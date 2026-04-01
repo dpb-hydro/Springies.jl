@@ -72,6 +72,30 @@ function Accelerator1D()
 end
 
 """
+    Accelerator3D
+
+Type to store three `Accelerator1D` objects, one for each dimension `x`, `y`, `z`.
+"""
+struct Accelerator3D
+    x::Accelerator1D
+    y::Accelerator1D
+    z::Accelerator1D
+end
+
+"""
+    Accelerator3D(; x, y, z)
+
+Constructor for Accelerator3D with default empty fields.
+"""
+function Accelerator3D(;
+    x::Accelerator1D=Accelerator1D(),
+    y::Accelerator1D=Accelerator1D(),
+    z::Accelerator1D=Accelerator1D(),
+)
+    Accelerator3D(x, y, z)
+end
+
+"""
     eltype(::Accelerator1D{OT}) where {OT}
 
 Return Oscillator1D type `OT` used by an `Accelerator1D` object.

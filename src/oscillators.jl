@@ -25,24 +25,24 @@ function Pendulum1D(; m::T, c::T, L::T, g::AbstractFloat=9.81) where {T<:Abstrac
     Pendulum1D(m, c, L, T(g))
 end
 
-# """
-#     Spring1D{FT} <: Oscillator1D{FT}
+"""
+    Spring1D{FT} <: Oscillator1D{FT}
 
-# Settings of a 1D spring oscillator.
-# """
-# struct Spring1D{FT} <: Oscillator1D{FT}
-#     m::FT
-#     c::FT
-#     k::FT
-# end
+Settings of a 1D spring oscillator.
+"""
+struct Spring1D{FT} <: Oscillator1D{FT}
+    m::FT
+    c::FT
+    k::FT
+end
 
-# """
-#     RLC1D{FT} <: Oscillator1D{FT}
+"""
+    RLC1D{FT} <: Oscillator1D{FT}
 
-# Settings of a 1D RLC circuit oscillator.
-# """
-# struct RLC1D{FT} <: Oscillator1D{FT}
-#     R::FT
-#     L::FT
-#     C::FT
-# end
+Settings of a 1D RLC circuit oscillator.
+"""
+struct RLC1D{FT} <: Oscillator1D{FT}
+    R::FT
+    L::FT
+    C::FT
+end
