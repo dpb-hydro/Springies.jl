@@ -1,8 +1,11 @@
 """
     damped_oscillation_ode!(du, u, p, t)
-    
-    u  = [x, dx, y, dy, z, dz]
-    du = [dx, d^2x, dy, d^2y, dz, d^2z]
+
+Internal function for `ode_numerical`.
+
+Note variable ordering:
+u  = [x, dx, y, dy, z, dz]
+du = [dx, d^2x, dy, d^2y, dz, d^2z]
 """
 function damped_oscillation_ode!(du, u, p::Accelerator3D, t)
     du[1] = u[2]
@@ -13,6 +16,11 @@ function damped_oscillation_ode!(du, u, p::Accelerator3D, t)
     du[6] = p.z(u..., t)
 end
 
+"""
+    ode_numerical(p::Accelerator3D, tspan, u0, Nt)
+    
+Solve the system of ODEs defined by `p`.
+"""
 function ode_numerical(p::Accelerator3D, tspan, u0, Nt)
     prob = ODEProblem(damped_oscillation_ode!, u0, tspan, p)
     sol = solve(prob, Tsit5(); reltol=1e-8, abstol=1e-10)

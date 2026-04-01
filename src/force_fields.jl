@@ -16,6 +16,11 @@ struct ZeroForce{FT} <: ForceField{FT}
     end
 end
 
+"""
+    (f::ZeroForce{FT})(x::FT, y::FT, z::FT, t::FT) where {FT<:AbstractFloat}
+
+Return zero to represent absence of force.
+"""
 function (f::ZeroForce{FT})(x::FT, y::FT, z::FT, t::FT) where {FT<:AbstractFloat}
     zero(FT)
 end

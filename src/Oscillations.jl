@@ -2,7 +2,10 @@ module Oscillations
 
 using OrdinaryDiffEq
 
-export ForceField, Accelerator1D, Accelerator3D, Oscillator1D, ode_numerical, get_coord
+export Oscillator1D
+export ForceField
+export Accelerator1D, Accelerator3D, get_coord
+export ode_numerical
 
 include("oscillators.jl")
 include("force_fields.jl")

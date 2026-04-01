@@ -6,7 +6,7 @@ Abstract supertype for all accelerators.
 abstract type Accelerator end
 
 """
-    Accelerator1D{OT<:Oscillator1D}
+    Accelerator1D{OT<:Oscillator1D,Dim}
 
 Type for 1D accelerators.
 """
@@ -22,6 +22,11 @@ struct Accelerator1D{OT<:Oscillator1D,Dim} <: Accelerator
     end
 end
 
+"""
+    Accelerator1D(oscillator::OT, force_field::ForceField, dim::Symbol) where {OT<:Oscillator1D}
+
+Construct Accelerator1D object.
+"""
 function Accelerator1D(
     oscillator::OT, force_field::ForceField, dim::Symbol
 ) where {OT<:Oscillator1D}
@@ -29,7 +34,7 @@ function Accelerator1D(
 end
 
 """
-    Accelerator1D()
+    Accelerator1D(dim::Symbol)
 
 Construct an empty Accelerator1D object.
 """
@@ -37,6 +42,11 @@ function Accelerator1D(dim::Symbol)
     Accelerator1D(EmptyOscillator(Float64), ZeroForce(Float64), dim)
 end
 
+"""
+    (a::Accelerator1D{<:EmptyOscillator})(x::FT, dx::FT, y::FT, dy::FT, z::FT, dz::FT, t::FT) where {FT<:AbstractFloat}
+
+Return zero for no acceleration.
+"""
 function (a::Accelerator1D{<:EmptyOscillator})(
     x::FT, dx::FT, y::FT, dy::FT, z::FT, dz::FT, t::FT
 ) where {FT<:AbstractFloat}
@@ -67,6 +77,11 @@ function Accelerator3D(;
     Accelerator3D(x, y, z)
 end
 
+"""
+    get_coord(dim::Symbol, x, dx, y, dy, z, dz)
+
+Helper function to choose variables to operate on.
+"""
 function get_coord(dim::Symbol, x, dx, y, dy, z, dz)
     dim === :x && return x, dx
     dim === :y && return y, dy
