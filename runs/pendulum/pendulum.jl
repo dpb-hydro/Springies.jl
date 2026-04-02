@@ -1,9 +1,9 @@
-using Oscillations
+using Springy
 using CairoMakie
 using Printf
 
 # Types holding pendulum settings and applied force
-include("types/pendulum_types.jl")
+include("pendulum_types.jl")
 
 # Pendulum settings
 m = 10.0

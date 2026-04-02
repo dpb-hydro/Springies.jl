@@ -1,10 +1,10 @@
-using Oscillations
+using Springy
 using ForwardDiff
 using CairoMakie
 using Printf
 
 # Types holding spring settings and applied force
-include("types/gyre_types.jl")
+include("gyre_types.jl")
 
 # Spring settings (5.0, 2.5, 1.0) (50.0, 10.0, 0.1)
 m = 5.0

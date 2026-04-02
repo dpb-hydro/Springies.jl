@@ -1,4 +1,4 @@
-module Oscillations
+module Springy
 
 using OrdinaryDiffEq
 

@@ -1,10 +1,10 @@
-using Oscillations
+using Springy
 using Test
 using Aqua
 
-@testset "Oscillations.jl" begin
+@testset "Springy.jl" begin
     @testset "Code quality (Aqua.jl)" begin
-        Aqua.test_all(Oscillations)
+        Aqua.test_all(Springy)
     end
     # Write your tests here.
 end
