@@ -88,3 +88,9 @@ function get_coord(dim::Symbol, x, dx, y, dy, z, dz)
     dim === :z && return z, dz
     throw(ArgumentError("Unknown dimension: $dim"))
 end
+
+function get_coord(dim::Symbol, x0, y0)
+    dim === :x && return x0
+    dim === :y && return y0
+    throw(ArgumentError("Unknown dimension: $dim"))
+end

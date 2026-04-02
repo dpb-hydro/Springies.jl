@@ -1,4 +1,3 @@
-
 struct Pendulum1D{FT} <: Oscillator1D{FT}
     m::FT
     c::FT
