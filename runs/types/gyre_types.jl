@@ -50,12 +50,13 @@ end
 struct GyreFX{FT<:AbstractFloat} <: ForceField{FT}
     G::GyreProperties{FT}
 end
-(f::GyreFX)(x, y, z, t) = -ForwardDiff.derivative(a -> gyre_stream(G, x, a, t), y)
+(f::GyreFX)(x, y, z, t) = -ForwardDiff.derivative(a -> gyre_stream(f.G, x, a, t), y)
 
 struct GyreFY{FT<:AbstractFloat} <: ForceField{FT}
     G::GyreProperties{FT}
 end
-(f::GyreFY)(x, y, z, t) = ForwardDiff.derivative(b -> gyre_stream(G, b, y, t), x)
+
+(f::GyreFY)(x, y, z, t) = ForwardDiff.derivative(b -> gyre_stream(f.G, b, y, t), x)
 
 function gyre_uv(G::GyreProperties, x::Real, y::Real, t::Real)
     u = -ForwardDiff.derivative(a -> gyre_stream(G, x, a, t), y)
