@@ -6,7 +6,7 @@ using Printf
 # Types holding spring settings and applied force
 include("types/gyre_types.jl")
 
-# Spring settings
+# Spring settings (5.0, 2.5, 1.0) (50.0, 10.0, 0.1)
 m = 5.0
 c = 2.5
 k = 1.0
@@ -18,14 +18,11 @@ gT = 10.0 # Wobble period
 G = GyreProperties(gA, ge, 2 * π / gT)
 
 # Time settings
-# tspan = (0.0, T * 15)
-tspan = (0.0, gT * 3)
-Nt = 81
+tspan = (0.0, gT * 30)
+Nt = 401
 t = range(tspan...; length=Nt)
 
-# # Initial conditions [x, dx, y, dy, z, dz]
-# u0 = [x0, 0.0, y0, 0.0, 0.0, 0.0]
-
+# Initial conditions [x, dx, y, dy, z, dz]
 nx = 81
 ny = 41
 xy = init_particles(nx, ny, 1.0, 0.5, 2.0, 1.0; method=:regular)
@@ -105,13 +102,13 @@ for i in eachindex(t)
 end
 
 @info "Assembling animation with ffmpeg..."
-# pass 1: generate palette
-palette = joinpath(framedir, "palette.png")
+# Pass 1: generate palette (stored outside framedir)
+palette = joinpath(dirname(framedir), "palette.png")
 run(
-    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen $palette`,
+    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen -update 1 $palette`,
 )
 
-# pass 2: encode with palette
+# Pass 2: encode with palette
 run(
     `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -i $palette -lavfi paletteuse $savepath`,
 )
