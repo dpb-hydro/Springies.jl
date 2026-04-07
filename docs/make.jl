@@ -24,7 +24,7 @@ makedocs(;
         "Home" => "index.md",
         "Example Gallery" => "examples.md",
         "API Reference" => [
-            "Types" => "api/types.md",
+            "Abstract Types" => "api/types.md",
         ],
     ],
 )

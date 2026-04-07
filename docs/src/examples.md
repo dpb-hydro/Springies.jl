@@ -15,7 +15,6 @@ ClockForce
 meshgrid_xy
 init_particles
 springy_solve
-Springy
 shift_scale
 differentials!
 unit_grid

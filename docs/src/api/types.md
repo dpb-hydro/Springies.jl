@@ -1,12 +1,19 @@
 ```@meta
 CurrentModule = Springies
-CollapsedDocStrings = true
+CollapsedDocStrings = false
 ```
+# Abstract Types
 
-# Types
+`DoubleGyre.jl` defines two abstract supertypes; **`Springy`** and **`ForceField`**.
 
-`DoubleGyre.jl` defines only one new type, `GyreProperties`. This stores the properties of the double gyre field.
+## Springy
+
+```@docs
+Springy
+```   
+
+## ForceField
 
 ```@docs
 ForceField
-```   
+```
