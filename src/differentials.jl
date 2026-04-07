@@ -1,21 +1,27 @@
+"""
+    differentials!(du, u, p::Springy{FT}, t)
+
+Fallback method for `differentials!`. Throws an `ArgumentError` if no specialised
+method is defined for the concrete type of `p`.
+
+New `Springy` subtypes must implement their own `differentials!` method.
+"""
 function differentials!(
     du::Vector{FT}, u::Vector{FT}, p::Springy{FT}, t::FT
 ) where {FT<:AbstractFloat}
     throw(
         ArgumentError(
-            "Function differentials! not defined for argument p of type $(typeof(p))"
+            "differentials! not defined for argument p of type $(typeof(p))"
         ),
     )
 end
 
 """
-    damped_oscillation_ode!(du, u, p, t)
+    differentials!(du, u, p::Pendulum1D{FT}, t)
 
-Internal function for `ode_numerical`.
+In-place ODE right-hand side for a [`Pendulum1D`](@ref).
 
-Note variable ordering:
-u  = [x, dx, y, dy, z, dz]
-du = [dx, d^2x, dy, d^2y, dz, d^2z]
+State vector convention: `u = [θ, dθ/dt]` = angle (rad) and angular velocity (rad/s)
 """
 function differentials!(
     du::Vector{FT}, u::Vector{FT}, p::Pendulum1D{FT}, t::FT
