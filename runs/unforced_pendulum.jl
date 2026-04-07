@@ -2,18 +2,20 @@ using Springies
 using CairoMakie
 using Printf
 
+
 # Pendulum settings
 m = 10.0
 c = 0.7
 L = 5.0
 
 # Time settings
-tspan = (0.0, 150.0)
-Nt = 401
+tspan = (0.0, 100.0)
+Nt = 376
 t = range(tspan...; length=Nt)
 
-# Initial conditions [x, dx]
-u0 = [0.0, 1.0]
+# Initial conditions [θ, dθ]
+u0 = [deg2rad(-20.0), 0.0]
+# u0 = [0.0, 0.5]
 
 # Animation settings
 savepath = joinpath(@__DIR__, "animations/unforced_pendulum.gif")

@@ -3,6 +3,8 @@ using ForwardDiff
 using CairoMakie
 using Printf
 
+# This is actually the grassy gyre; the jelly gyre would be more like an FE model
+
 # Types holding spring settings and applied force
 include("gyre_types.jl")
 
