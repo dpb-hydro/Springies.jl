@@ -4,7 +4,7 @@ The Double Gyre canonical problem.
 
 **Dan Bartley, March 2026**
 
-![Double Gyre animation](double_gyre.gif)
+![Double Gyre animation](unforced_pendulum_launched.gif)
 
 ## Welcome!
 
@@ -24,13 +24,3 @@ Pkg.dev("path/to/DoubleGyre.jl")
 ### Quickstart example
 
 The quickstart example below shows the features of `DoubleGyre.jl` and how to create the animation shown at the top of this page. Check out the **API Reference** for a breakdown.
-
-```@eval
-code = read("../../example/doublegyre_demo.jl", String)
-using Markdown
-Markdown.parse("""
-\```julia
-$code
-\```
-""")
-```
