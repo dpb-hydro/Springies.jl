@@ -18,4 +18,4 @@ In `Springies.jl`, we encode dynamical system setups in two objects:
 
 We can then solve the system with the [`springy_solve`](@ref) function.
 
-Check out the [Example Gallery](@ref) for project ideas, and the [API Reference](@ref "Abstract Types") for a more detailed breakdown of functionality. Have fun!
+Check out the [Example Gallery](@ref) for project ideas, and the [API Reference](@ref "Types") for a more detailed breakdown of functionality. Have fun!

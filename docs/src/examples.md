@@ -8,10 +8,6 @@ CollapsedDocStrings = true
 `DoubleGyre.jl` defines only one new type, `GyreProperties`. This stores the properties of the double gyre field.
 
 ```@docs
-Pendulum1D
-ZeroForce
-CosineForce
-ClockForce
 meshgrid_xy
 init_particles
 springy_solve
