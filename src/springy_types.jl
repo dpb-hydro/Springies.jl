@@ -17,6 +17,8 @@ struct Pendulum1D{FT} <: Springy{FT}
     end
 end
 
-function Pendulum1D(; m::T, c::T, L::T, F::ForceField=ZeroForce(Float64), g::AbstractFloat=9.81) where {T<:AbstractFloat}
+function Pendulum1D(;
+    m::T, c::T, L::T, F::ForceField=ZeroForce(Float64), g::AbstractFloat=9.81
+) where {T<:AbstractFloat}
     Pendulum1D(m, c, L, T(g), F)
 end

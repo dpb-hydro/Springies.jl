@@ -65,10 +65,7 @@ rod_x = Observable([0.0, xs[1]])
 rod_y = Observable([L, ys[1]])
 seis_t = Observable([t[1]])
 seis_theta = Observable([theta_deg[1]])
-seis_ylim = 1.05*max(
-    abs(minimum(theta_deg)),
-    abs(maximum(theta_deg))
-)
+seis_ylim = 1.05*max(abs(minimum(theta_deg)), abs(maximum(theta_deg)))
 
 time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
 text!(ax, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey)
@@ -78,9 +75,7 @@ lines!(ax, rod_x, rod_y; color=:black, linewidth=2)
 scatter!(ax, x_obs, y_obs; markersize=20, color=:blue)
 lines!(ax2, seis_t, seis_theta; color=:blue, linewidth=2)
 
-legend_entries = [
-    [LineElement(; color=:blue, linewidth=2)],
-]
+legend_entries = [[LineElement(; color=:blue, linewidth=2)],]
 Legend(
     fig[1, 2],
     legend_entries,
@@ -105,7 +100,6 @@ for i in eachindex(xs)
     xF_obs[] = [xF]
     yF_obs[] = [yF]
 
-
     t_now = t[i]
     t_max = t_now + window / 2
     t_min = t_now - window / 2
@@ -123,10 +117,14 @@ end
 
 # Pass 1: generate palette (stored outside framedir)
 palette = joinpath(dirname(framedir), "palette.png")
-run(`ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen -update 1 $palette`,)
+run(
+    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen -update 1 $palette`,
+)
 
 # Pass 2: encode with palette
-run(`ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -i $palette -lavfi paletteuse $savepath`,)
+run(
+    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -i $palette -lavfi paletteuse $savepath`,
+)
 
 @info "Cleaning up..."
 rm(framedir; recursive=true)
