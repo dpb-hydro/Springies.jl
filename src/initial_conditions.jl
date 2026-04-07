@@ -21,7 +21,7 @@ function shift_scale(collection::AbstractArray, x0::Real, A::Real)
 end
 
 """
-    unit_grids(nx, ny, method)
+    unit_grid(nx, ny, method)
 
 Create two coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
 
@@ -64,7 +64,7 @@ Initialise particle positions either as a regular grid or random placement.
 - `cx`: x-coordinate centre of particle cluster
 - `cy`: y-coordinate centre of particle cluster
 - `Ax`: extent of particle cluster along x dimension
-- `Ay`: extent of particle cluster along x dimension
+- `Ay`: extent of particle cluster along y dimension
 - `method`: `:regular` for grid, `:rand` for random
 
 # Note

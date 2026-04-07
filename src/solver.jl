@@ -1,28 +1,21 @@
 """
-    damped_oscillation_ode!(du, u, p, t)
+    springy_solve(p::Springy{FT}, tspan::Tuple{FT,FT}, u0::Vector{FT}, Nt::Integer) where {FT<:AbstractFloat}
 
-Internal function for `ode_numerical`.
+Solve the ODE system defined by the Springy `p` and its corresponding `differentials!` function. Return the solution interpolated onto a uniform time grid.
 
-Note variable ordering:
-u  = [x, dx, y, dy, z, dz]
-du = [dx, d^2x, dy, d^2y, dz, d^2z]
-"""
-function damped_oscillation_ode!(du, u, p::Accelerator3D, t)
-    du[1] = u[2]
-    du[2] = p.x(u..., t)
-    du[3] = u[4]
-    du[4] = p.y(u..., t)
-    du[5] = u[6]
-    du[6] = p.z(u..., t)
-end
+Wrapper for `OrdinaryDiffEq.solve`.
 
+# Arguments
+- `p`: Springy object.
+- `tspan`: Start and end times `(t0, t1)`.
+- `u0`: Initial state vector.
+- `Nt`: Number of time points in the output grid.
 """
-    ode_numerical(p::Accelerator3D, tspan, u0, Nt)
-    
-Solve the system of ODEs defined by `p`.
-"""
-function ode_numerical(p::Accelerator3D, tspan, u0, Nt)
-    prob = ODEProblem(damped_oscillation_ode!, u0, tspan, p)
+function springy_solve(
+    p::Springy{FT}, tspan::Tuple{FT,FT}, u0::Vector{FT}, Nt::Integer
+) where {FT<:AbstractFloat}
+    prob = ODEProblem(differentials!, u0, tspan, p)
     sol = solve(prob, Tsit5(); reltol=1e-8, abstol=1e-10)
-    return sol(range(tspan...; length=Nt))
+    sol_interpolated = sol(range(tspan...; length=Nt))
+    return sol_interpolated
 end

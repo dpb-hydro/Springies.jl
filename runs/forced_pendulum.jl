@@ -1,40 +1,35 @@
-using Springy
+using Springies
 using CairoMakie
 using Printf
-
-# Types holding pendulum settings and applied force
-include("pendulum_types.jl")
 
 # Pendulum settings
 m = 10.0
 c = 0.7
 L = 5.0
 
-# Applied force settings
+# External force
 F0 = 10.0
 T = 10.0
 omega = 2 * pi / T
+F_external = CosineForce(F0, omega)
 
 # Time settings
 tspan = (0.0, T * 15)
 Nt = 401
 t = range(tspan...; length=Nt)
 
-# Initial conditions [x, dx, y, dy, z, dz]
-u0 = [-10*pi/180.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+# Initial conditions [x, dx]
+u0 = [0.0, 1.0]
 
 # Animation settings
-savepath = joinpath(@__DIR__, "pendulum.gif")
+savepath = joinpath(@__DIR__, "animations/forced_pendulum.gif")
 fps = 10
 
-# Create accelerator object
-pend_x = Pendulum1D(; m=m, c=c, L=L)
-F_x = CosineForce(F0, omega)
-accn_x = Accelerator1D(pend_x, F_x, :x)
-accn = Accelerator3D(; x=accn_x)
+# Create pendulum object
+pendulum = Pendulum1D(; m=m, c=c, L=L, F=F_external)
 
 # Solve ODEs
-u_solved = ode_numerical(accn, tspan, u0, Nt)
+u_solved = springy_solve(pendulum, tspan, u0, Nt)
 theta_num = [u[1] for u in u_solved]
 
 # Analytical solution (using nondimensionalisation)
@@ -151,16 +146,17 @@ for i in eachindex(xs)
 end
 
 @info "Assembling animation with ffmpeg..."
-# pass 1: generate palette
-palette = joinpath(framedir, "palette.png")
+# Pass 1: generate palette (stored outside framedir)
+palette = joinpath(dirname(framedir), "palette.png")
 run(
-    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen $palette`,
+    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen -update 1 $palette`,
 )
 
-# pass 2: encode with palette
+# Pass 2: encode with palette
 run(
     `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -i $palette -lavfi paletteuse $savepath`,
 )
 
 @info "Cleaning up frames..."
 rm(framedir; recursive=true)
+rm(palette)
