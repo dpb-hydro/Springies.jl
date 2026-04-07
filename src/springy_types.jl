@@ -1,7 +1,17 @@
 """
-    Accelerator1D{OT<:Oscillator1D,Dim}
+    Pendulum1D{FT<:AbstractFloat} <: Springy{FT}
 
-Type for 1D accelerators.
+A damped, driven pendulum in 1D.
+
+# Fields
+- `m`: Mass
+- `c`: Damping coefficient
+- `L`: Pendulum length
+- `g`: Gravitational acceleration
+- `F`: External force field
+- `mL`: Precomputed `m * L`
+- `c_over_m`: Precomputed `c / m`
+- `g_over_L`: Precomputed `g / L`
 """
 struct Pendulum1D{FT} <: Springy{FT}
     m::FT
@@ -17,8 +27,13 @@ struct Pendulum1D{FT} <: Springy{FT}
     end
 end
 
+"""
+    Pendulum1D(; m, c, L, F=nothing, g=9.81)
+
+Keyword constructor for `Pendulum1D`. Defaults to `g = 9.81` and zero external forcing.
+"""
 function Pendulum1D(;
-    m::T, c::T, L::T, F::ForceField=ZeroForce(Float64), g::AbstractFloat=9.81
+    m::T, c::T, L::T, F::Union{ForceField{T},Nothing}=nothing, g::AbstractFloat=9.81
 ) where {T<:AbstractFloat}
-    Pendulum1D(m, c, L, T(g), F)
+    Pendulum1D(m, c, L, T(g), isnothing(F) ? ZeroForce(T) : F)
 end

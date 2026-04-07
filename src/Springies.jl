@@ -15,9 +15,11 @@ include("initial_conditions.jl")
 include("solver.jl")
 
 # ----------------------------------------------------------------------------------------------------------
-# Each new type NewSpringy{FT} <: Springy{FT} must implement
-# function differentials!(du::Vector{FT}, u::Vector{FT}, p::NewSpringy{FT}, t::FT) where {FT<:AbstractFloat}
-# in file differentials.jl
+# INTERFACE NOTES
+#
+# - Each Springy subtype must define differentials!(du, u, p::MySpringy{FT}, t) in differentials.jl
+#
+# - Each ForceField subtype must implement (f::MyForce{FT})(x, y, z, t) in external_forcing.jl
 # ----------------------------------------------------------------------------------------------------------
 
 end # module

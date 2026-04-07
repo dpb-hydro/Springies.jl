@@ -7,9 +7,6 @@ m = 10.0
 c = 0.7
 L = 5.0
 
-# External force
-F_external = ZeroForce(Float64)
-
 # Time settings
 tspan = (0.0, 150.0)
 Nt = 401
@@ -23,7 +20,7 @@ savepath = joinpath(@__DIR__, "animations/unforced_pendulum.gif")
 fps = 10
 
 # Create pendulum object
-pendulum = Pendulum1D(; m=m, c=c, L=L, F=F_external)
+pendulum = Pendulum1D(; m=m, c=c, L=L)
 
 # Solve ODEs
 u_solved = springy_solve(pendulum, tspan, u0, Nt)
