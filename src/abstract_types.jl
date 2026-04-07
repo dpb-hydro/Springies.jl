@@ -1,7 +1,7 @@
 """
-    Accelerator
+    Springy{FT<:AbstractFloat}
 
-Abstract supertype for all accelerators.
+Abstract supertype for all Springies.
 """
 abstract type Springy{FT<:AbstractFloat} end
 
