@@ -1,7 +1,10 @@
+# unforced_pendulum.jl
+# Dan Bartley, April 2026
+# Damped pendulum with no external forcing
+
 using Springies
 using CairoMakie
 using Printf
-
 
 # Pendulum settings
 m = 10.0
@@ -14,37 +17,35 @@ Nt = 376
 t = range(tspan...; length=Nt)
 
 # Initial conditions [θ, dθ]
-u0 = [deg2rad(-20.0), 0.0]
-# u0 = [0.0, 0.5]
+# u0 = [deg2rad(-20.0), 0.0] # Release by dropping
+u0 = [0.0, 0.5]              # Release by launching
 
 # Animation settings
 savepath = joinpath(@__DIR__, "animations/unforced_pendulum.gif")
 fps = 10
-
-# Create pendulum object
-pendulum = Pendulum1D(; m=m, c=c, L=L)
-
-# Solve ODEs
-u_solved = springy_solve(pendulum, tspan, u0, Nt)
-theta_num = [u[1] for u in u_solved]
-theta_deg = rad2deg.(theta_num)
-
-# Animate
-xs = L .* sin.(theta_num)
-ys = L .- L .* cos.(theta_num)
-F_scale = L / 20.0
-xF = 0.0
-yF = L / 2
 window = 20.0
 
+# Create pendulum object
+pendulum = Pendulum1D(m=m, c=c, L=L)
+
+# Solve ODEs
+@info "Solving ODE system..."
+u_solved = springy_solve(pendulum, tspan, u0, Nt)
+theta_rad = [u[1] for u in u_solved]
+
+# Derived values for plotting
+x_bob = L .* sin.(theta_rad)       # Pendulum bob x position
+y_bob = L .- L .* cos.(theta_rad)  # Pendulum bob y position
+theta_deg = rad2deg.(theta_rad)    # Angle in radians
+
+# Animate
 framedir = joinpath(dirname(savepath), "frames")
 mkpath(framedir)
-
-fig = Figure(; size=(1200, 600))
-ax = Axis(
+fig = Figure(size=(1200, 600))
+ax1 = Axis(
     fig[1, 1];
-    xlabel="x",
-    ylabel="y",
+    xlabel="x [m]",
+    ylabel="y [m]",
     aspect=DataAspect(),
     limits=(-L * sind(30.0), L * sind(30.0), -0.25, L + 0.1),
 )
@@ -56,71 +57,50 @@ ax2 = Axis(
     xticks=0.0:10.0:t[end],
 )
 
-x_obs = Observable(xs[1])
-y_obs = Observable(ys[1])
-xF_obs = Observable([xF])
-yF_obs = Observable([yF])
-rod_x = Observable([0.0, xs[1]])
-rod_y = Observable([L, ys[1]])
-seis_t = Observable([t[1]])
-seis_theta = Observable([theta_deg[1]])
+x_bob_obs = Observable(x_bob[1])
+y_bob_obs = Observable(y_bob[1])
+x_rod_obs = Observable([0.0, x_bob[1]])
+y_rod_obs = Observable([L, y_bob[1]])
+t_seis_obs = Observable([t[1]])
+theta_seis_obs = Observable([theta_deg[1]])
+time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
+
 seis_ylim = 1.05*max(abs(minimum(theta_deg)), abs(maximum(theta_deg)))
 
-time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
-text!(ax, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey)
-
-lines!(ax, [-L * 0.2, L * 0.2], [L, L]; color=:black, linewidth=4)
-lines!(ax, rod_x, rod_y; color=:black, linewidth=2)
-scatter!(ax, x_obs, y_obs; markersize=20, color=:blue)
-lines!(ax2, seis_t, seis_theta; color=:blue, linewidth=2)
-
-legend_entries = [[LineElement(; color=:blue, linewidth=2)],]
-Legend(
-    fig[1, 2],
-    legend_entries,
-    ["Full response (numerical)"];
-    tellwidth=false,
-    tellheight=false,
-    halign=:right,
-    valign=:top,
-    margin=(10, 10, 10, 10),
-)
+text!(ax1, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey) # Time label
+lines!(ax1, [-L * 0.2, L * 0.2], [L, L]; color=:black, linewidth=4)              # Ceiling
+lines!(ax1, x_rod_obs, y_rod_obs; color=:black, linewidth=2)                     # Rod
+scatter!(ax1, x_bob_obs, y_bob_obs; markersize=20, color=:blue)                  # Bob
+lines!(ax2, t_seis_obs, theta_seis_obs; color=:blue, linewidth=2, label="Full response (numerical)")  # Seismograph
+axislegend(ax2; position=:rt, margin=(10, 10, 10, 10))
 
 Label(fig[0, :], "Damped Pendulum"; fontsize=20, font=:bold)
 colsize!(fig.layout, 1, Relative(0.45))
 colsize!(fig.layout, 2, Relative(0.55))
 
 @info "Saving frames to $framedir"
-for i in eachindex(xs)
-    x_obs[] = xs[i]
-    y_obs[] = ys[i]
-    rod_x[] = [0.0, xs[i]]
-    rod_y[] = [L, ys[i]]
-    xF_obs[] = [xF]
-    yF_obs[] = [yF]
-
+for i in eachindex(x_bob)
+    x_bob_obs[] = x_bob[i]
+    y_bob_obs[] = y_bob[i]
+    x_rod_obs[] = [0.0, x_bob[i]]
+    y_rod_obs[] = [L, y_bob[i]]
     t_now = t[i]
     t_max = t_now + window / 2
     t_min = t_now - window / 2
     mask = t_min .<= t[1:i] .<= t_max
-    seis_t[] = t[1:i][mask]
-    seis_theta[] = theta_deg[1:i][mask]
+    t_seis_obs[] = t[1:i][mask]
+    theta_seis_obs[] = theta_deg[1:i][mask]
     ax2.limits[] = (t_min, t_max, -seis_ylim, seis_ylim)
-
     time_obs[] = @sprintf("t = %05.2f s", t_now)
-
     save(joinpath(framedir, @sprintf("frame_%06d.png", i)), fig; px_per_unit=1)
 end
 
 @info "Assembling animation with ffmpeg..."
-
-# Pass 1: generate palette (stored outside framedir)
+# Two passes of ffmpeg: pass 1 = generate palette, pass 2 = encode with palette
 palette = joinpath(dirname(framedir), "palette.png")
 run(
     `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen -update 1 $palette`,
 )
-
-# Pass 2: encode with palette
 run(
     `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -i $palette -lavfi paletteuse $savepath`,
 )
