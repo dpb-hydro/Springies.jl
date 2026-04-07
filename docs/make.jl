@@ -22,7 +22,8 @@ makedocs(;
     modules=[Springies],
     pages=[
         "Home" => "index.md",
-        "API reference" => [
+        "Example Gallery" => "examples.md",
+        "API Reference" => [
             "Types" => "api/types.md",
         ],
     ],

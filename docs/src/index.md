@@ -1,26 +1,21 @@
-# DoubleGyre.jl
+# Springies.jl
 
-The Double Gyre canonical problem.
 
-**Dan Bartley, March 2026**
+**Dan Bartley, April 2026**
 
-![Double Gyre animation](unforced_pendulum_launched.gif)
+![Pendulum animation](hero_image.gif)
 
 ## Welcome!
 
-Welcome to `DoubleGyre.jl`! This project is for having fun with the Double Gyre canonical problem in dynamical systems.
+Welcome to `Springies.jl`! This project is a sandbox for having fun with dynamical systems problems. It's a wrapper for [OrdinaryDiffEq.jl](https://docs.sciml.ai/OrdinaryDiffEq/stable/). 
 
-## Getting started
+## Quickstart guide
 
-### Installation
+In `Springies.jl`, we encode dynamical system setups in two objects:
+ 
+* [`Springy`](@ref Springies.Springy) objects, containing system parameters and external forcing,
+* [`differentials!`](@ref Springies.differentials!) functions, describing how differential values are computed.
 
-To use `DoubleGyre.jl` after downloading the source code:
+We can then solve the system with the [`springy_solve`](@ref) function.
 
-```julia
-using Pkg
-Pkg.dev("path/to/DoubleGyre.jl")
-```
-
-### Quickstart example
-
-The quickstart example below shows the features of `DoubleGyre.jl` and how to create the animation shown at the top of this page. Check out the **API Reference** for a breakdown.
+Check out the [Example Gallery](@ref) for project ideas, and the [API Reference](@ref Types) for a more detailed breakdown of functionality. Have fun!

@@ -3,10 +3,21 @@ CurrentModule = Springies
 CollapsedDocStrings = true
 ```
 
-# Types
+# Example Gallery
 
 `DoubleGyre.jl` defines only one new type, `GyreProperties`. This stores the properties of the double gyre field.
 
 ```@docs
-ForceField
-```   
+Pendulum1D
+ZeroForce
+CosineForce
+ClockForce
+meshgrid_xy
+init_particles
+springy_solve
+Springy
+shift_scale
+differentials!
+unit_grid
+flatten
+```     
