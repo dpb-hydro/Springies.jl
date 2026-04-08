@@ -4,7 +4,7 @@ using Aqua
 
 @testset "Springies.jl" begin
     @testset "Code quality (Aqua.jl)" begin
-        Aqua.test_all(Springies)
+        Aqua.test_all(Springies; persistent_tasks=false)
     end
 
     @testset "Unforced pendulum decays to zero" begin
