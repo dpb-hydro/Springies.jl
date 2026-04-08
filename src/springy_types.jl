@@ -71,7 +71,27 @@ struct BendyStalk{FT} <: Springy{FT}
     F::ForceField{FT}
     c_over_m::FT
     k_over_m::FT
-    function BendyStalk(m::T, c::T, k::T, x0::T, y0::T, F::ForceField{T}) where {T<:AbstractFloat}
+    function BendyStalk(
+        m::T, c::T, k::T, x0::T, y0::T, F::ForceField{T}
+    ) where {T<:AbstractFloat}
         new{T}(m, c, k, x0, y0, F, c / m, k / m)
     end
+end
+
+"""
+    ThreeBody{FT} <: Springy{FT}
+
+The canonical Three-body Problem.
+
+# Fields
+- `m1`: Mass of particle 1
+- `m2`: Mass of particle 2
+- `m3`: Mass of particle 3
+- `G`: Gravitational constant
+"""
+struct ThreeBody{FT} <: Springy{FT}
+    m1::FT
+    m2::FT
+    m3::FT
+    G::FT
 end
