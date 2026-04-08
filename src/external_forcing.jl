@@ -61,9 +61,10 @@ function (f::ClockForce{FT})(theta::FT, dtheta::FT, t::FT) where {FT<:AbstractFl
 end
 
 """
-    GyreProperties{T<:AbstractFloat}
+    DoubleGyre{FT} <: ForceField{FT}
+    (f::DoubleGyre)(x, y, t)
 
-Properties of the Double Gyre field.
+The canonical Double Gyre field.
 
 # Fields
 - `A`: Velocity magnitude control
@@ -81,7 +82,7 @@ end
 
 Stream function for a Double Gyre field with properties `G` at point (`x`, `y`) and time `t`.
 """
-function gyre_stream(G::DoubleGyre, x::Real, y::Real, t::Real)
+function gyre_stream(G::DoubleGyre{FT}, x::FT, y::FT, t::FT) where {FT<:AbstractFloat}
     a = G.e * sin(G.omega * t)
     fx = a * x^2 + (1 - 2a) * x
     return G.A * sin(pi * fx) * sin(pi * y)
