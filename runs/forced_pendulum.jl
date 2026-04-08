@@ -92,7 +92,13 @@ t_seis_obs = Observable([t[1]])
 theta_seis_obs = Observable([theta_deg[1]])
 time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
 
-seis_ylim = 1.05*max(abs(minimum(theta_deg)), abs(maximum(theta_deg)))
+seis_ylim =
+    1.05 * max(
+        abs(minimum(theta_deg)),
+        abs(maximum(theta_deg)),
+        abs(minimum(theta_steady)),
+        abs(maximum(theta_steady)),
+    )
 
 text!(ax1, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey) # Time label
 lines!(ax1, [-L * 0.2, L * 0.2], [L, L]; color=:black, linewidth=4)              # Ceiling
