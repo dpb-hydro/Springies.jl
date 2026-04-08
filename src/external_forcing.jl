@@ -77,11 +77,6 @@ struct DoubleGyre{FT} <: ForceField{FT}
     omega::FT
 end
 
-"""
-    gyre_stream(G, x, y, t)
-
-Stream function for a Double Gyre field with properties `G` at point (`x`, `y`) and time `t`.
-"""
 function gyre_stream(G::DoubleGyre{FT}, x::FT, y::FT, t::FT) where {FT<:AbstractFloat}
     a = G.e * sin(G.omega * t)
     fx = a * x^2 + (1 - 2a) * x

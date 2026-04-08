@@ -19,6 +19,7 @@ These are the concrete subtypes of `Springy` currently defined in `Springies.jl`
 
 ```@docs
 Pendulum1D
+FreeParticle2D
 ```     
 
 ## ForceField
@@ -35,4 +36,5 @@ These are the concrete subtypes of `ForceField` currently defined in `Springies.
 ZeroForce
 CosineForce
 ClockForce
+DoubleGyre
 ``` 

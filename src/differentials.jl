@@ -17,7 +17,7 @@ end
 
 In-place ODE right-hand side for a [`Pendulum1D`](@ref).
 
-State vector convention: `u = [θ, dθ/dt]` = angle (rad) and angular velocity (rad/s)
+State vector convention: `u = [θ, dθ/dt]`.
 """
 function differentials!(
     du::Vector{FT}, u::Vector{FT}, p::Pendulum1D{FT}, t::FT
@@ -27,6 +27,13 @@ function differentials!(
     return du
 end
 
+"""
+    differentials!(du, u, p::FreeParticle2D{FT}, t)
+
+In-place ODE right-hand side for a [`FreeParticle2D`](@ref).
+
+State vector convention: `u = [x, y]`.
+"""
 function differentials!(
     du::Vector{FT}, u::Vector{FT}, p::FreeParticle2D{FT}, t::FT
 ) where {FT<:AbstractFloat}
