@@ -1,6 +1,6 @@
 """
-    Pendulum1D{FT<:AbstractFloat} <: Springy{FT}
-    Pendulum1D(; m, c, L, F=nothing, g=9.81)
+    Pendulum1D{FT} <: Springy{FT}
+    Pendulum1D(; m, c, L, g=9.81, F=nothing)
 
 A damped, driven pendulum in 1D. The keyword constructor defaults to `g = 9.81`
 and zero external forcing.
@@ -33,4 +33,16 @@ function Pendulum1D(;
     m::T, c::T, L::T, F::Union{ForceField{T},Nothing}=nothing, g::AbstractFloat=9.81
 ) where {T<:AbstractFloat}
     Pendulum1D(m, c, L, T(g), isnothing(F) ? ZeroForce(T) : F)
+end
+
+"""
+    FreeParticle2D{FT} <: Springy{FT}
+
+A particle that can be advected in two dimensions by a field.
+
+# Fields
+- `F`: External force field (conceptually this is a velocity field rather than a force field).
+"""
+struct FreeParticle2D{FT} <: Springy{FT}
+    F::ForceField{FT}
 end

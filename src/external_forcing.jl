@@ -59,3 +59,36 @@ function (f::ClockForce{FT})(theta::FT, dtheta::FT, t::FT) where {FT<:AbstractFl
         return zero(FT)
     end
 end
+
+"""
+    GyreProperties{T<:AbstractFloat}
+
+Properties of the Double Gyre field.
+
+# Fields
+- `A`: Velocity magnitude control
+- `e`: Wobble size control
+- `omega`: Wobble angular frequency
+"""
+struct DoubleGyre{FT} <: ForceField{FT}
+    A::FT
+    e::FT
+    omega::FT
+end
+
+"""
+    gyre_stream(G, x, y, t)
+
+Stream function for a Double Gyre field with properties `G` at point (`x`, `y`) and time `t`.
+"""
+function gyre_stream(G::DoubleGyre, x::Real, y::Real, t::Real)
+    a = G.e * sin(G.omega * t)
+    fx = a * x^2 + (1 - 2a) * x
+    return G.A * sin(pi * fx) * sin(pi * y)
+end
+
+function (f::DoubleGyre{FT})(x::FT, y::FT, t::FT) where {FT<:AbstractFloat}
+    u = -ForwardDiff.derivative(a -> gyre_stream(f, x, a, t), y)
+    v = ForwardDiff.derivative(b -> gyre_stream(f, b, y, t), x)
+    return [u, v]
+end

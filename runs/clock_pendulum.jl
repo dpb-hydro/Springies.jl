@@ -80,11 +80,7 @@ t_seis_obs = Observable([t[1]])
 theta_seis_obs = Observable([theta_deg[1]])
 time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
 
-seis_ylim =
-    1.05 * max(
-        abs(minimum(theta_deg)),
-        abs(maximum(theta_deg))
-    )
+seis_ylim = 1.05 * max(abs(minimum(theta_deg)), abs(maximum(theta_deg)))
 
 text!(ax1, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey) # Time label
 lines!(ax1, [-L * 0.2, L * 0.2], [L, L]; color=:black, linewidth=4)              # Ceiling
@@ -102,16 +98,8 @@ Legend(
     margin=(0, 20.0, 0, 10.0), # (L, R, B, T)
 )
 
-lines!(
-    ax2,
-    t_seis_obs,
-    theta_seis_obs;
-    color=:blue,
-    linewidth=2,
-)  # Seismograph
-legend_entries = [
-    [LineElement(; color=:blue, linewidth=2)],
-]
+lines!(ax2, t_seis_obs, theta_seis_obs; color=:blue, linewidth=2)  # Seismograph
+legend_entries = [[LineElement(; color=:blue, linewidth=2)],]
 Legend(
     fig[1, 2],
     legend_entries,

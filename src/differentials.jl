@@ -24,4 +24,14 @@ function differentials!(
 ) where {FT<:AbstractFloat}
     du[1] = u[2]
     du[2] = (p.F(u[1], u[2], t) / p.mL) - p.c_over_m * u[2] - p.g_over_L * sin(u[1])
+    return du
+end
+
+function differentials!(
+    du::Vector{FT}, u::Vector{FT}, p::FreeParticle2D{FT}, t::FT
+) where {FT<:AbstractFloat}
+    uv = p.F(u[1], u[2], t)
+    du[1] = uv[1]
+    du[2] = uv[2]
+    return du
 end

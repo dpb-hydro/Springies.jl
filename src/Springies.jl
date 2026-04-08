@@ -1,11 +1,12 @@
 module Springies
 
 using OrdinaryDiffEq
+using ForwardDiff
 
-export Pendulum1D                         # Springy types
-export ZeroForce, CosineForce, ClockForce # External forcing types
-export meshgrid_xy, init_particles        # Initial condition convenience functions
-export springy_solve                      # Solver
+export Pendulum1D, FreeParticle2D                     # Springy types
+export ZeroForce, CosineForce, ClockForce, DoubleGyre # External forcing types
+export meshgrid_xy, init_particles                    # Initial condition convenience functions
+export springy_solve                                  # Solver
 
 include("abstract_types.jl")
 include("external_forcing.jl")
