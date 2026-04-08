@@ -9,10 +9,14 @@ CollapsedDocStrings = true
 
 We can launch a pendulum by dropping it from rest:
 
-![Pendulum animation](animations/unforced_pendulum_dropped.gif)
+![Dropped pendulum animation](animations/unforced_pendulum_dropped.gif)
 
 And we can also launch it with a nonzero initial velocity:
 
-![Pendulum animation](animations/unforced_pendulum_launched.gif)
+![Launched pendulum animation](animations/unforced_pendulum_launched.gif)
 
-## Forced pendulum  
+## Forced pendulum
+
+If we apply a periodic forcing to the pendulum, it eventually reaches a steady state controlled by that forcing. This steady state can be found through nondimensionalisation:
+
+![Forced pendulum animation](animations/forced_pendulum.gif)
