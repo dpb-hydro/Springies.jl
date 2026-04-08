@@ -1,17 +1,22 @@
-# double_gyre.jl
+# grassy_gyres.jl
 # Dan Bartley, April 2026
-# Advecting particles in the canonical double gyre velocity field
+# Forcing grass blades in a Double Gyre force field.
 
 using Springies
 using CairoMakie
 using Printf
 
+# Spring settings
+m = 5.0
+c = 2.5
+k = 2.5
+
 # Gyre settings
 A = 0.1  # Magnitude control
 ϵ = 0.25 # Wobble size control
 T = 10.0 # Wobble period
+
 G = DoubleGyre(A, ϵ, 2*pi/T)
-S = FreeParticle2D(G)
 
 # Time settings
 tspan = (0.0, T * 15)
@@ -19,18 +24,21 @@ Nt = 401
 t = range(tspan...; length=Nt)
 
 # Initial conditions
-nx = 15   # Number
-xc = 0.5  # Centre
-Ax = 0.1  # Extent
-ny = 15   # Number
-yc = 0.75 # Centre
-Ay = 0.1  # Extent
+nx = 81   # Number
+xc = 1.0  # Centre
+Ax = 2.0  # Extent
+ny = 41   # Number
+yc = 0.5 # Centre
+Ay = 1.0  # Extent
 method = :regular # [:regular/:rand]
-u0s = init_particles(nx, ny, xc, yc, Ax, Ay; method=method)
-Np = nx*ny
+xy0 = init_particles(nx, ny, xc, yc, Ax, Ay; method=method)
+x0 = xy0[1, :]
+y0 = xy0[2, :]
+Np = nx * ny
+u0s = [x0'; zeros(Np)'; y0'; zeros(Np)']
 
 # Animation settings
-savepath = joinpath(@__DIR__, "animations/double_gyre.gif")
+savepath = joinpath(@__DIR__, "animations/grassy_gyre.gif")
 fps = 10
 nquiver = 20
 
@@ -39,9 +47,10 @@ nquiver = 20
 xs = zeros(Np, Nt)
 ys = zeros(Np, Nt)
 for i in 1:Np
+    S = BendyStalk(m, c, k, x0[i], y0[i], G)
     u_solved = springy_solve(S, tspan, u0s[:, i], Nt)
     xs[i, :] = [u[1] for u in u_solved]
-    ys[i, :] = [u[2] for u in u_solved]
+    ys[i, :] = [u[3] for u in u_solved]
 end
 
 # Fixed coarse grid for quiver
@@ -65,7 +74,7 @@ uv_obs = Observable([
 ])
 time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
 
-ax.title = @sprintf("Double Gyre Particle Advection")
+ax.title = @sprintf("Grassy Double Gyre")
 
 # Flatten quiver grid for arrows
 xq_flat = xgrid[:]
@@ -74,7 +83,7 @@ u_obs = Observable(first.(uv_obs[])[:])
 v_obs = Observable(last.(uv_obs[])[:])
 
 arrows2d!(ax, xq_flat, yq_flat, u_obs, v_obs; lengthscale=0.2, color=:grey)
-scatter!(ax, x_obs, y_obs; markersize=10, color=:blue)
+scatter!(ax, x_obs, y_obs; markersize=10, color=:darkolivegreen)
 text!(ax, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey) # Time label
 
 for i in 1:Nt

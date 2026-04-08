@@ -77,7 +77,7 @@ struct DoubleGyre{FT} <: ForceField{FT}
     omega::FT
 end
 
-function gyre_stream(G::DoubleGyre{FT}, x::FT, y::FT, t::FT) where {FT<:AbstractFloat}
+function gyre_stream(G::DoubleGyre, x::Real, y::Real, t::Real) # ::Real is needed as a looser constraint for ForwardDiff
     a = G.e * sin(G.omega * t)
     fx = a * x^2 + (1 - 2a) * x
     return G.A * sin(pi * fx) * sin(pi * y)

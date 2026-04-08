@@ -42,3 +42,21 @@ function differentials!(
     du[2] = uv[2]
     return du
 end
+
+"""
+    differentials!(du, u, p::BendyStalk{FT}, t)
+
+In-place ODE right-hand side for a [`BendyStalk`](@ref).
+
+State vector convention: `u = [x, dx, y, dy]`.
+"""
+function differentials!(
+    du::Vector{FT}, u::Vector{FT}, p::BendyStalk{FT}, t::FT
+) where {FT<:AbstractFloat}
+    uv = p.F(u[1], u[3], t)
+    du[1] = u[2]
+    du[2] = (uv[1] / p.m) - p.c_over_m * u[2] - p.k_over_m * (u[1] - p.x0)
+    du[3] = u[4]
+    du[4] = (uv[2] / p.m) - p.c_over_m * u[4] - p.k_over_m * (u[3] - p.y0)
+    return du
+end
