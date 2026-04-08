@@ -27,4 +27,10 @@ We can also do a basic simulation of a clock:
 
 ## The Double Gyre
 
+We can use `Springies.jl` to play with advection in the canonical Double Gyre problem:
+
 ![Double Gyre advection](animations/double_gyre.gif)
+
+What if, instead of a velocity field, we were to think of the Double Gyre over a field of grass? Let's model the grass blades as flexible beams; we'll decouple the x and y components so that we can think of two springs, one in the x and the other in the y direction:
+
+![Double Gyre springs](animations/grassy_gyre.gif)
