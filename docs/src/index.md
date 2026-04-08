@@ -3,7 +3,7 @@
 
 **Dan Bartley, April 2026**
 
-![Pendulum animation](hero_image.gif)
+![Pendulum animation](animations/unforced_pendulum_dropped.gif)
 
 ## Welcome!
 
@@ -14,8 +14,8 @@ Welcome to `Springies.jl`! This project is a sandbox for having fun with dynamic
 In `Springies.jl`, we encode dynamical system setups in two objects:
  
 * [`Springy`](@ref Springies.Springy) objects, containing system parameters and external forcing,
-* [`differentials!`](@ref Springies.differentials!) functions, describing how differential values are computed.
+* [`differentials!`](@ref Springies.differentials!) functions, describing how differential terms are computed.
 
-We can then solve the system with the [`springy_solve`](@ref) function.
+We then solve the system with the [`springy_solve`](@ref) function.
 
 Check out the [Example Gallery](@ref) for project ideas, and the [API Reference](@ref "Types") for a more detailed breakdown of functionality. Have fun!

@@ -5,14 +5,14 @@ CollapsedDocStrings = true
 
 # Example Gallery
 
-`DoubleGyre.jl` defines only one new type, `GyreProperties`. This stores the properties of the double gyre field.
+## Unforced pendulum
 
-```@docs
-meshgrid_xy
-init_particles
-springy_solve
-shift_scale
-differentials!
-unit_grid
-flatten
-```     
+We can launch a pendulum by dropping it from rest:
+
+![Pendulum animation](animations/unforced_pendulum_dropped.gif)
+
+And we can also launch it with a nonzero initial velocity:
+
+![Pendulum animation](animations/unforced_pendulum_launched.gif)
+
+## Forced pendulum  

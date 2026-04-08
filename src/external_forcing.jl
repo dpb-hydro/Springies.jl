@@ -27,7 +27,9 @@ struct CosineForce{FT} <: ForceField{FT}
     omega::FT
 end
 
-(f::CosineForce{FT})(x::FT, y::FT, z::FT, t::FT) where {FT<:AbstractFloat} = f.F0 * cos(f.omega * t)
+function (f::CosineForce{FT})(x::FT, y::FT, z::FT, t::FT) where {FT<:AbstractFloat}
+    f.F0 * cos(f.omega * t)
+end
 
 """
     ClockForce{FT} <: ForceField{FT}
@@ -44,4 +46,6 @@ struct ClockForce{FT} <: ForceField{FT}
     xc::FT
 end
 
-(f::ClockForce{FT})(x::FT, y::FT, z::FT, t::FT) where {FT<:AbstractFloat} = abs(x) >= f.xc ? f.F0 : zero(FT)
+function (f::ClockForce{FT})(x::FT, y::FT, z::FT, t::FT) where {FT<:AbstractFloat}
+    abs(x) >= f.xc ? f.F0 : zero(FT)
+end

@@ -26,7 +26,7 @@ fps = 10
 window = 20.0
 
 # Create pendulum object
-pendulum = Pendulum1D(m=m, c=c, L=L)
+pendulum = Pendulum1D(; m=m, c=c, L=L)
 
 # Solve ODEs
 @info "Solving ODE system..."
@@ -41,7 +41,7 @@ theta_deg = rad2deg.(theta_rad)    # Angle in radians
 # Animate
 framedir = joinpath(dirname(savepath), "frames")
 mkpath(framedir)
-fig = Figure(size=(1200, 600))
+fig = Figure(; size=(1200, 600))
 ax1 = Axis(
     fig[1, 1];
     xlabel="x [m]",
@@ -71,7 +71,14 @@ text!(ax1, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey)
 lines!(ax1, [-L * 0.2, L * 0.2], [L, L]; color=:black, linewidth=4)              # Ceiling
 lines!(ax1, x_rod_obs, y_rod_obs; color=:black, linewidth=2)                     # Rod
 scatter!(ax1, x_bob_obs, y_bob_obs; markersize=20, color=:blue)                  # Bob
-lines!(ax2, t_seis_obs, theta_seis_obs; color=:blue, linewidth=2, label="Full response (numerical)")  # Seismograph
+lines!(
+    ax2,
+    t_seis_obs,
+    theta_seis_obs;
+    color=:blue,
+    linewidth=2,
+    label="Full response (numerical)",
+)  # Seismograph
 axislegend(ax2; position=:rt, margin=(10, 10, 10, 10))
 
 Label(fig[0, :], "Damped Pendulum"; fontsize=20, font=:bold)

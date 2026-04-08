@@ -9,11 +9,7 @@ New `Springy` subtypes must implement their own `differentials!` method.
 function differentials!(
     du::Vector{FT}, u::Vector{FT}, p::Springy{FT}, t::FT
 ) where {FT<:AbstractFloat}
-    throw(
-        ArgumentError(
-            "differentials! not defined for argument p of type $(typeof(p))"
-        ),
-    )
+    throw(ArgumentError("differentials! not defined for argument p of type $(typeof(p))"))
 end
 
 """

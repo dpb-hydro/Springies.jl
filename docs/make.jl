@@ -1,9 +1,9 @@
-# This script builds the documentation for ToyLand.jl
+# This script builds the documentation for Springies.jl
 # To run it, simply enter the project root directory and run:
 #
 # include("docs/make.jl")
 #
-# The docs will be built locally in `ToyLand.jl/docs/build`. To view them, open `index.html` in your browser.
+# The docs will be built locally in `Springies.jl/docs/build`. To view them, open `index.html` in your browser.
 #
 # TODO: deploy documentation to GitHub Pages (if project becomes public).
 
@@ -26,6 +26,8 @@ makedocs(;
         "API Reference" => [
             "Types" => "api/types.md",
             "differentials!" => "api/differentials.md",
+            "springy_solve" => "api/solver.md",
+            "Initial conditions" => "api/init_particles.md",
         ],
     ],
 )
