@@ -23,5 +23,5 @@ function differentials!(
     du::Vector{FT}, u::Vector{FT}, p::Pendulum1D{FT}, t::FT
 ) where {FT<:AbstractFloat}
     du[1] = u[2]
-    du[2] = (p.F(u[1], 0.0, 0.0, t) / p.mL) - p.c_over_m * u[2] - p.g_over_L * sin(u[1])
+    du[2] = (p.F(u[1], u[2], t) / p.mL) - p.c_over_m * u[2] - p.g_over_L * sin(u[1])
 end
