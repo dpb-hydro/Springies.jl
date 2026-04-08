@@ -20,3 +20,7 @@ And we can also launch it with a nonzero initial velocity:
 If we apply a periodic forcing to the pendulum, it eventually reaches a steady state controlled by that forcing. This steady state can be found through nondimensionalisation:
 
 ![Forced pendulum animation](animations/forced_pendulum.gif)
+
+We can also do a basic simulation of a clock:
+
+![Forced pendulum animation](animations/clock_pendulum.gif)
