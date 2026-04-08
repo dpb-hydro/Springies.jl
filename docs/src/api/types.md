@@ -21,6 +21,7 @@ These are the concrete subtypes of `Springy` currently defined in `Springies.jl`
 Pendulum1D
 FreeParticle2D
 BendyStalk
+ThreeBody
 ```     
 
 ## ForceField
