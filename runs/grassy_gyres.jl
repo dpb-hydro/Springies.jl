@@ -24,10 +24,10 @@ Nt = 401
 t = range(tspan...; length=Nt)
 
 # Initial conditions
-nx = 81   # Number
+nx = 41   # Number
 xc = 1.0  # Centre
 Ax = 2.0  # Extent
-ny = 41   # Number
+ny = 21   # Number
 yc = 0.5 # Centre
 Ay = 1.0  # Extent
 method = :regular # [:regular/:rand]
