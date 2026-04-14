@@ -29,8 +29,8 @@ savepath = joinpath(@__DIR__, "animations/clock_pendulum.gif")
 fps = 10
 window = 20.0
 
-# Create pendulum object
-pendulum = Pendulum1D(; m=m, c=c, L=L, F=F_external)
+# Create pendulum instance
+pendulum = Pendulum1D(m, c, L, F=F_external)
 
 # Solve ODEs
 @info "Solving ODE system..."
@@ -99,7 +99,7 @@ Legend(
 )
 
 lines!(ax2, t_seis_obs, theta_seis_obs; color=:blue, linewidth=2)  # Seismograph
-legend_entries = [[LineElement(; color=:blue, linewidth=2)],]
+legend_entries = [[LineElement(; color=:blue, linewidth=2)]]
 Legend(
     fig[1, 2],
     legend_entries,

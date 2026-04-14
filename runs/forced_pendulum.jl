@@ -31,7 +31,7 @@ fps = 10
 window = 20.0
 
 # Create pendulum instance
-pendulum = Pendulum1D(m, c, L, F=F_external)
+pendulum = Pendulum1D(m, c, L; F=F_external)
 
 # Solve ODEs
 @info "Solving ODE system..."
