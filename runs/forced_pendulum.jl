@@ -30,8 +30,8 @@ savepath = joinpath(@__DIR__, "animations/forced_pendulum.gif")
 fps = 10
 window = 20.0
 
-# Create pendulum object
-pendulum = Pendulum1D(; m=m, c=c, L=L, F=F_external)
+# Create pendulum instance
+pendulum = Pendulum1D(m, c, L, F=F_external)
 
 # Solve ODEs
 @info "Solving ODE system..."

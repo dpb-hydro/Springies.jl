@@ -25,7 +25,7 @@ savepath = joinpath(@__DIR__, "animations/unforced_pendulum.gif")
 fps = 10
 window = 20.0
 
-# Create pendulum object
+# Create pendulum instance
 pendulum = Pendulum1D(m, c, L)
 
 # Solve ODEs
