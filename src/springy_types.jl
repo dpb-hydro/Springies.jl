@@ -52,7 +52,7 @@ end
 """
     FreeParticle2D{FT} <: Springy{FT}
 
-A particle that can be advected in two dimensions by a field.
+A massless particle that can be advected in two dimensions by a field.
 
 # Fields
 - `F`: External force field (conceptually this is a velocity field rather than a force field).
