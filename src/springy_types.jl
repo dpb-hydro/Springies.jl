@@ -1,6 +1,10 @@
+# ----------------------------------------------------------------------------------------------------------
+# PENDULUM1D
+# ----------------------------------------------------------------------------------------------------------
+
 """
     Pendulum1D{FT} <: Springy{FT}
-    Pendulum1D(; m, c, L, g=9.81, F=nothing)
+    Pendulum1D(; m, c, L, g=FT(9.81), F=ZeroForce(FT))
 
 A damped, driven pendulum in 1D. The keyword constructor defaults to `g = 9.81`
 and zero external forcing.
@@ -24,16 +28,22 @@ struct Pendulum1D{FT} <: Springy{FT}
     mL::FT
     c_over_m::FT
     g_over_L::FT
-    function Pendulum1D(m::T, c::T, L::T, g::T, F::ForceField{T}) where {T<:AbstractFloat}
-        return new{T}(m, c, L, g, F, m * L, c / m, g / L)
+    function Pendulum1D(
+        m::FT, c::FT, L::FT, g::FT, F::ForceField{FT}
+    ) where {FT<:AbstractFloat}
+        return new{FT}(m, c, L, g, F, m * L, c / m, g / L)
     end
 end
 
 function Pendulum1D(;
-    m::T, c::T, L::T, F::Union{ForceField{T},Nothing}=nothing, g::AbstractFloat=9.81
-) where {T<:AbstractFloat}
-    return Pendulum1D(m, c, L, T(g), isnothing(F) ? ZeroForce(T) : F)
+    m::FT, c::FT, L::FT, g::FT=FT(9.81), F::ForceField{FT}=ZeroForce(FT)
+) where {FT<:AbstractFloat}
+    return Pendulum1D(m, c, L, g, F)
 end
+
+# ----------------------------------------------------------------------------------------------------------
+# FREEPARTICLE2D
+# ----------------------------------------------------------------------------------------------------------
 
 """
     FreeParticle2D{FT} <: Springy{FT}
@@ -46,6 +56,10 @@ A particle that can be advected in two dimensions by a field.
 struct FreeParticle2D{FT} <: Springy{FT}
     F::ForceField{FT}
 end
+
+# ----------------------------------------------------------------------------------------------------------
+# BENDYSTALK
+# ----------------------------------------------------------------------------------------------------------
 
 """
     BendyStalk{FT} <: Springy{FT}
@@ -72,11 +86,15 @@ struct BendyStalk{FT} <: Springy{FT}
     c_over_m::FT
     k_over_m::FT
     function BendyStalk(
-        m::T, c::T, k::T, x0::T, y0::T, F::ForceField{T}
-    ) where {T<:AbstractFloat}
-        return new{T}(m, c, k, x0, y0, F, c / m, k / m)
+        m::FT, c::FT, k::FT, x0::FT, y0::FT, F::ForceField{FT}
+    ) where {FT<:AbstractFloat}
+        return new{FT}(m, c, k, x0, y0, F, c / m, k / m)
     end
 end
+
+# ----------------------------------------------------------------------------------------------------------
+# THREEBODY
+# ----------------------------------------------------------------------------------------------------------
 
 """
     ThreeBody{FT} <: Springy{FT}
