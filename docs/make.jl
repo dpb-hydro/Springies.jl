@@ -12,6 +12,7 @@ using Springies
 
 makedocs(;
     sitename="Springies.jl",
+    checkdocs=:exports,
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", nothing) == "true",
         example_size_threshold=nothing,  # Disable size warning thresholds entirely
