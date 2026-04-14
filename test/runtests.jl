@@ -8,7 +8,7 @@ using Aqua
     end
 
     @testset "Unforced pendulum decays to zero" begin
-        pendulum = Pendulum1D(m=10.0, c=0.7, L=5.0)
+        pendulum = Pendulum1D(10.0, 0.7, 5.0)
         tspan = (0.0, 1000.0)
         u0 = [0.0, 0.5]
         Nt = 10
@@ -20,26 +20,24 @@ using Aqua
     end
 
     @testset "DoubleGyre" begin
-        @testset "Initial conditions" begin
-            @testset "Basic test regular" begin
-                nx = 5
-                xc = 0.0
-                Ax = 1.0
+        @testset "Basic regular initial conditions" begin
+            nx = 5
+            xc = 0.0
+            Ax = 1.0
 
-                ny = 5
-                yc = 0.0
-                Ay = 1.0
+            ny = 5
+            yc = 0.0
+            Ay = 1.0
 
-                method = :regular
+            method = :regular
 
-                particles = init_particles(nx, ny, xc, yc, Ax, Ay, method=method)
+            particles = init_particles(nx, ny, xc, yc, Ax, Ay; method=method)
 
-                r1 = repeat(range(-0.5, 0.5, length=5), inner=5)
-                r2 = repeat(reverse(range(-0.5, 0.5, length=5)), outer=5)
-                r = permutedims(hcat(r1, r2))
+            r1 = repeat(range(-0.5, 0.5; length=5); inner=5)
+            r2 = repeat(reverse(range(-0.5, 0.5; length=5)); outer=5)
+            r = permutedims(hcat(r1, r2))
 
-                @test all(particles .== permutedims(hcat(r1, r2)))
-            end
+            @test all(particles .== permutedims(hcat(r1, r2)))
         end
     end
 end
