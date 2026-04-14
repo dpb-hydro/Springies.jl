@@ -25,14 +25,14 @@ struct Pendulum1D{FT} <: Springy{FT}
     c_over_m::FT
     g_over_L::FT
     function Pendulum1D(m::T, c::T, L::T, g::T, F::ForceField{T}) where {T<:AbstractFloat}
-        new{T}(m, c, L, g, F, m * L, c / m, g / L)
+        return new{T}(m, c, L, g, F, m * L, c / m, g / L)
     end
 end
 
 function Pendulum1D(;
     m::T, c::T, L::T, F::Union{ForceField{T},Nothing}=nothing, g::AbstractFloat=9.81
 ) where {T<:AbstractFloat}
-    Pendulum1D(m, c, L, T(g), isnothing(F) ? ZeroForce(T) : F)
+    return Pendulum1D(m, c, L, T(g), isnothing(F) ? ZeroForce(T) : F)
 end
 
 """
@@ -74,7 +74,7 @@ struct BendyStalk{FT} <: Springy{FT}
     function BendyStalk(
         m::T, c::T, k::T, x0::T, y0::T, F::ForceField{T}
     ) where {T<:AbstractFloat}
-        new{T}(m, c, k, x0, y0, F, c / m, k / m)
+        return new{T}(m, c, k, x0, y0, F, c / m, k / m)
     end
 end
 

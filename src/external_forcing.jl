@@ -8,7 +8,7 @@ For use with [`Pendulum1D`](@ref) springies.
 """
 struct ZeroForce{FT} <: ForceField{FT}
     function ZeroForce(::Type{FT}) where {FT<:AbstractFloat}
-        new{FT}()
+        return new{FT}()
     end
 end
 
@@ -32,7 +32,7 @@ struct CosineForce{FT} <: ForceField{FT}
 end
 
 function (f::CosineForce{FT})(theta::FT, dtheta::FT, t::FT) where {FT<:AbstractFloat}
-    f.F0 * cos(f.omega * t)
+    return f.F0 * cos(f.omega * t)
 end
 
 """
