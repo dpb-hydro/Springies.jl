@@ -1376,7 +1376,7 @@ version = "2.7.2"
 deps = ["DiffEqBase", "ForwardDiff", "OrdinaryDiffEq", "Printf", "StaticArrays"]
 path = "."
 uuid = "df417c55-a893-40e7-b28a-78ce8be48996"
-version = "1.0.0-DEV"
+version = "0.1.0"
 
 [[deps.Static]]
 deps = ["CommonWorldInvalidations", "IfElse", "PrecompileTools", "SciMLPublic"]

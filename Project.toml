@@ -1,7 +1,7 @@
 name = "Springies"
 uuid = "df417c55-a893-40e7-b28a-78ce8be48996"
-version = "1.0.0-DEV"
-authors = ["dpb-hydro <daniel.bartley@hotmail.co.uk> and contributors"]
+version = "0.1.0"
+authors = ["Daniel Bartley"]
 
 [deps]
 DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"

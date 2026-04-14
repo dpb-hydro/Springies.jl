@@ -9,7 +9,7 @@ CollapsedDocStrings = false
 
 ## ForceField
 
-`ForceField` objects contain the external forcing of a dynamical system. They are passed to `Springy` objects.
+`ForceField` structs contain the external forcing of a dynamical system. They are passed to `Springy` structs.
 
 ```@docs
 ForceField
@@ -26,7 +26,7 @@ DoubleGyre
 
 ## Springy
 
-`Springy` objects contain the parameters and external forcing of a dynamical system. The external forcing is contained in a `ForceField` object.
+`Springy` structs contain the parameters and external forcing of a dynamical system. The external forcing is contained within a `ForceField` struct.
 
 ```@docs
 Springy

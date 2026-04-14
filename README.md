@@ -1,7 +1,13 @@
 # Springies.jl [![Build Status](https://github.com/dpb-hydro/Springy.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/dpb-hydro/Springy.jl/actions/workflows/CI.yml?query=branch%3Amain) [![Aqua](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl) [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle) [![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://dpb-hydro.github.io/Springies.jl/dev/)
 
-Welcome to `Springies.jl`! This project is a sandbox for having fun with dynamical systems problems. It's a wrapper for [OrdinaryDiffEq.jl](https://docs.sciml.ai/OrdinaryDiffEq/stable/). 
+Welcome to `Springies.jl`! This is a personal sandbox project for having fun with dynamical systems problems. It's a wrapper for [OrdinaryDiffEq.jl](https://docs.sciml.ai/OrdinaryDiffEq/stable/). 
 
 ## How to get started
 
-Everything you need to know about using `Springies.jl` can be found in the documentation. After cloning this repo to your computer and instantiating the environment, you can build the documentation locally with the script `docs/make.jl` (you will need to have [Documenter.jl](https://documenter.juliadocs.org/stable/) available). You can then view the documentation by opening `./docs/build/index.html` with your browser. Have fun!
+As a personal project, `Springies.jl` is not a registered Julia package. To use it, clone this repo and add it to your desired Julia environment with:
+
+```julia
+] dev path/to/Springies.jl
+```
+
+Everything you need to know about using `Springies.jl` can be found in the [documentation](https://dpb-hydro.github.io/Springies.jl/dev/). Have fun!
