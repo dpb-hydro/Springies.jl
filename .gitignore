@@ -1,3 +1,4 @@
 docs/build
 *.gif
 *.png
+!docs/src/animations/*.gif
