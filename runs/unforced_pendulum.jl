@@ -1,6 +1,6 @@
 # unforced_pendulum.jl
 # Dan Bartley, April 2026
-# Damped pendulum with no external forcing
+# Damped pendulum with no external forcing.
 
 using Springies
 using CairoMakie

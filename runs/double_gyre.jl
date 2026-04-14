@@ -1,6 +1,6 @@
 # double_gyre.jl
 # Dan Bartley, April 2026
-# Advecting particles in the canonical double gyre velocity field
+# Advecting particles in the canonical double gyre velocity field.
 
 using Springies
 using CairoMakie

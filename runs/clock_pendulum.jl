@@ -1,6 +1,6 @@
 # clock_pendulum.jl
 # Dan Bartley, April 2026
-# Damped pendulum with Heaviside external forcing
+# Damped pendulum with Heaviside external forcing.
 
 using Springies
 using CairoMakie

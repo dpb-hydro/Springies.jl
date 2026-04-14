@@ -1,6 +1,6 @@
 # forced_pendulum.jl
 # Dan Bartley, April 2026
-# Damped pendulum with periodic external forcing
+# Damped pendulum with periodic external forcing.
 
 using Springies
 using CairoMakie
