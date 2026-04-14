@@ -1,3 +1,7 @@
+# initial_conditions.jl
+# Dan Bartley, April 2026
+# Convenience functions for specifying initial conditions.
+
 """
     meshgrid_xy(x, y)
 
@@ -12,36 +16,48 @@ function meshgrid_xy(x::AbstractVector, y::AbstractVector)
 end
 
 """
+    init_particles(nx, ny, cx, cy, Ax, Ay; method=:regular)
+    init_particles(n, cx, cy, Ax, Ay; method=:random)
+
+Initialise particle positions either as a regular grid or random placement.
+
+# Arguments
+- `nx`: number of particles along x dimension (`:regular` only)
+- `ny`: number of particles along y dimension (`:regular` only)
+- `n`: total number of particles (`:random` only)
+- `cx`: x-coordinate centre of particle cluster
+- `cy`: y-coordinate centre of particle cluster
+- `Ax`: extent of particle cluster along x dimension
+- `Ay`: extent of particle cluster along y dimension
+- `method`: `:regular` for grid, `:random` for random placement
+"""
+function init_particles(args...; method::Symbol)
+    return init_particles(args..., Val(method))
+end
+
+function init_particles(
+    nx::Integer, ny::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, ::Val{:regular}
+)
+    x_grid, y_grid = unit_grid(nx, ny, Val(:regular))
+    return flatten(shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay))
+end
+
+function init_particles(n::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, ::Val{:random})
+    x_grid, y_grid = unit_grid(n, 1, Val(:random))
+    return flatten(shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay))
+end
+
+# ----------------------------------------------------------------------------------------------------------
+# HELPER FUNCTIONS
+# ----------------------------------------------------------------------------------------------------------
+
+"""
     shift_scale(collection, x0, A)
 
 Move a collection of points to a new origin `x0` and scale by `A`.
 """
-function shift_scale(collection::AbstractArray, x0::Real, A::Real)
+function shift_scale(collection::Array, x0::Real, A::Real)
     return x0 .+ A .* collection
-end
-
-"""
-    unit_grid(nx, ny, method)
-
-Create two coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
-
-Generation method can either be `:regular` or `:rand`.
-"""
-function unit_grid(nx::Integer, ny::Integer; method)
-    (nx > 0 && ny > 0) ||
-        throw(ArgumentError("nx and ny must be greater than zero, got $nx and $ny"))
-
-    if method == :regular
-        xi = range(-0.5, 0.5; length=nx)
-        yi = range(-0.5, 0.5; length=ny)
-        return meshgrid_xy(xi, yi)
-    elseif method == :rand
-        x = rand(ny, nx) .- 0.5
-        y = rand(ny, nx) .- 0.5
-        return x, y
-    else
-        throw(ArgumentError("method must be :regular or :rand, got :$method"))
-    end
 end
 
 """
@@ -54,26 +70,26 @@ function flatten(xgrid::AbstractArray, ygrid::AbstractArray)
 end
 
 """
-    init_particles(nx, ny, cx, cy, Ax, Ay; method)
+    unit_grid(nx, ny, method)
 
-Initialise particle positions either as a regular grid or random placement.
+Create two coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
 
-# Arguments
-- `nx`: number of particles along x dimension
-- `ny`: number of particles along y dimension
-- `cx`: x-coordinate centre of particle cluster
-- `cy`: y-coordinate centre of particle cluster
-- `Ax`: extent of particle cluster along x dimension
-- `Ay`: extent of particle cluster along y dimension
-- `method`: `:regular` for grid, `:rand` for random
-
-# Note
-For the case `method=:rand`, `nx` and `ny` are not meaningful as numbers of points along grid dimensions, but instead the number of particles is controlled by `nx`*`ny`.
+Generation method can either be `:regular` or `:random`.
 """
-function init_particles(
-    nx::Integer, ny::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real; method
-)
-    x_grid, y_grid = unit_grid(nx, ny; method=method)
-    x, y = shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay)
-    return flatten(x, y)
+function unit_grid(nx::Integer, ny::Integer; method::Symbol)
+    (nx > 0 && ny > 0) ||
+        throw(ArgumentError("nx and ny must be greater than zero, got $nx and $ny"))
+    return unit_grid(nx, ny, Val(method))
+end
+
+function unit_grid(nx::Integer, ny::Integer, ::Val{:regular})
+    xi = range(-0.5, 0.5; length=nx)
+    yi = range(-0.5, 0.5; length=ny)
+    return meshgrid_xy(xi, yi)
+end
+
+function unit_grid(nx::Integer, ny::Integer, ::Val{:random})
+    x = rand(ny, nx) .- 0.5
+    y = rand(ny, nx) .- 0.5
+    return x, y
 end

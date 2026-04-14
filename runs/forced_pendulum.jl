@@ -1,6 +1,6 @@
 # forced_pendulum.jl
 # Dan Bartley, April 2026
-# Damped pendulum with periodic external forcing
+# Damped pendulum with periodic external forcing.
 
 using Springies
 using CairoMakie
@@ -30,8 +30,8 @@ savepath = joinpath(@__DIR__, "animations/forced_pendulum.gif")
 fps = 10
 window = 20.0
 
-# Create pendulum object
-pendulum = Pendulum1D(; m=m, c=c, L=L, F=F_external)
+# Create pendulum instance
+pendulum = Pendulum1D(m, c, L; F=F_external)
 
 # Solve ODEs
 @info "Solving ODE system..."

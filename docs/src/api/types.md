@@ -5,24 +5,7 @@ CollapsedDocStrings = false
 
 # Types
 
-`Springies.jl` defines two abstract supertypes; **`Springy`** and **`ForceField`**.
-
-## Springy
-
-`Springy` objects contain the parameters and external forcing of a dynamical system. The external forcing is contained in a `ForceField` object.
-
-```@docs
-Springy
-```   
-
-These are the concrete subtypes of `Springy` currently defined in `Springies.jl`:
-
-```@docs
-Pendulum1D
-FreeParticle2D
-BendyStalk
-ThreeBody
-```     
+`Springies.jl` defines two abstract supertypes; **`ForceField`** and **`Springy`**.
 
 ## ForceField
 
@@ -40,3 +23,20 @@ CosineForce
 ClockForce
 DoubleGyre
 ``` 
+
+## Springy
+
+`Springy` objects contain the parameters and external forcing of a dynamical system. The external forcing is contained in a `ForceField` object.
+
+```@docs
+Springy
+```   
+
+These are the concrete subtypes of `Springy` currently defined in `Springies.jl`:
+
+```@docs
+Pendulum1D
+FreeParticle2D
+BendyStalk
+ThreeBody
+```

@@ -1,6 +1,6 @@
 # three_body.jl
 # Dan Bartley, April 2026
-# The canonical Three-body Problem
+# The canonical Three-body Problem.
 
 using Springies
 using CairoMakie

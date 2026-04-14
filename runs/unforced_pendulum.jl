@@ -1,6 +1,6 @@
 # unforced_pendulum.jl
 # Dan Bartley, April 2026
-# Damped pendulum with no external forcing
+# Damped pendulum with no external forcing.
 
 using Springies
 using CairoMakie
@@ -25,8 +25,8 @@ savepath = joinpath(@__DIR__, "animations/unforced_pendulum.gif")
 fps = 10
 window = 20.0
 
-# Create pendulum object
-pendulum = Pendulum1D(; m=m, c=c, L=L)
+# Create pendulum instance
+pendulum = Pendulum1D(m, c, L)
 
 # Solve ODEs
 @info "Solving ODE system..."
@@ -65,7 +65,7 @@ t_seis_obs = Observable([t[1]])
 theta_seis_obs = Observable([theta_deg[1]])
 time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
 
-seis_ylim = 1.05*max(abs(minimum(theta_deg)), abs(maximum(theta_deg)))
+seis_ylim = 1.05 * max(abs(minimum(theta_deg)), abs(maximum(theta_deg)))
 
 text!(ax1, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey) # Time label
 lines!(ax1, [-L * 0.2, L * 0.2], [L, L]; color=:black, linewidth=4)              # Ceiling

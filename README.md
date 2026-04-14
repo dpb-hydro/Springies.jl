@@ -4,25 +4,4 @@ Welcome to `Springies.jl`! This project is a sandbox for having fun with dynamic
 
 ## How to get started
 
-1. Clone this repo to your computer.
-2. Enter the cloned repo on your computer:
-
-```bash
-cd /path/to/Springies.jl
-```
-
-3. Instantiate the main project environment:
-
-```julia
-julia --project=. -e 'using Pkg; Pkg.instantiate()'
-```
-
-5. Build the documentation (you will need `Documenter.jl` available):
-
-```julia
-julia --project=. docs/make.jl
-```
-
-6. Open the documentation by opening `./docs/build/index.html` with your browser.
-
-Everything you need to know about using `Springies.jl` can be found in the documentation. Have fun!
+Everything you need to know about using `Springies.jl` can be found in the documentation. After cloning this repo to your computer and instantiating the environment, you can build the documentation locally with the script `docs/make.jl` (you will need to have [Documenter.jl](https://documenter.juliadocs.org/stable/) available). You can then view the documentation by opening `./docs/build/index.html` with your browser. Have fun!
