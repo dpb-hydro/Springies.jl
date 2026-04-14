@@ -1,7 +1,15 @@
+# differentials.jl
+# Dan Bartley, April 2026
+# ODE definitions for Springy instances.
+
+# ----------------------------------------------------------------------------------------------------------
+# FALLBACK
+# ----------------------------------------------------------------------------------------------------------
+
 """
     differentials!(du, u, p::Springy{FT}, t)
 
-Fallback method for `differentials!`. Throws an `ArgumentError` if no specialised
+Fallback method for `differentials!`. Throw an `ArgumentError` if no specialised
 method is defined for the concrete type of `p`.
 
 New `Springy` subtypes must implement their own `differentials!` method.
@@ -11,6 +19,10 @@ function differentials!(
 ) where {FT<:AbstractFloat}
     throw(ArgumentError("differentials! not defined for argument p of type $(typeof(p))"))
 end
+
+# ----------------------------------------------------------------------------------------------------------
+# PENDULUM1D
+# ----------------------------------------------------------------------------------------------------------
 
 """
     differentials!(du, u, p::Pendulum1D{FT}, t)
@@ -27,6 +39,10 @@ function differentials!(
     return du
 end
 
+# ----------------------------------------------------------------------------------------------------------
+# FREEPARTICLE2D
+# ----------------------------------------------------------------------------------------------------------
+
 """
     differentials!(du, u, p::FreeParticle2D{FT}, t)
 
@@ -42,6 +58,10 @@ function differentials!(
     du[2] = uv[2]
     return du
 end
+
+# ----------------------------------------------------------------------------------------------------------
+# BENDYSTALK
+# ----------------------------------------------------------------------------------------------------------
 
 """
     differentials!(du, u, p::BendyStalk{FT}, t)
@@ -61,6 +81,10 @@ function differentials!(
     return du
 end
 
+# ----------------------------------------------------------------------------------------------------------
+# THREEBODY
+# ----------------------------------------------------------------------------------------------------------
+
 """
     differentials!(du, u, p::ThreeBody{FT}, t)
 
@@ -71,7 +95,7 @@ State vector convention: `u = [x1, y1, dx1, dy1, x2, y2, dx2, dy2, x3, y3, dx3, 
 function Springies.differentials!(
     du::Vector{FT}, u::Vector{FT}, p::ThreeBody{FT}, t::FT
 ) where {FT<:AbstractFloat}
-    dist = (x1, y1, x2, y2) -> sqrt((x1 - x2)^2 + (y1 - y2)^2)
+    dist = (x1, y1, x2, y2) -> hypot(x1 - x2, y1 - y2)
     r12 = dist(u[1], u[2], u[5], u[6])
     r13 = dist(u[1], u[2], u[9], u[10])
     r23 = dist(u[5], u[6], u[9], u[10])
