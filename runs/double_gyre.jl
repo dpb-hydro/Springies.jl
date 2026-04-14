@@ -10,7 +10,7 @@ using Printf
 A = 0.1  # Magnitude control
 ϵ = 0.25 # Wobble size control
 T = 10.0 # Wobble period
-G = DoubleGyre(A, ϵ, 2*pi/T)
+G = DoubleGyre(A, ϵ, 2 * pi / T)
 S = FreeParticle2D(G)
 
 # Time settings
@@ -19,15 +19,12 @@ Nt = 401
 t = range(tspan...; length=Nt)
 
 # Initial conditions
-nx = 15   # Number
-xc = 0.5  # Centre
-Ax = 0.1  # Extent
-ny = 15   # Number
-yc = 0.75 # Centre
-Ay = 0.1  # Extent
-method = :regular # [:regular/:rand]
+nx, ny = 15, 15    # Number
+xc, yc = 0.5, 0.75 # Centre
+Ax, Ay = 0.1, 0.1  # Extent
+method = :regular # [:regular/:random]
 u0s = init_particles(nx, ny, xc, yc, Ax, Ay; method=method)
-Np = nx*ny
+Np = nx * ny
 
 # Animation settings
 savepath = joinpath(@__DIR__, "animations/double_gyre.gif")
