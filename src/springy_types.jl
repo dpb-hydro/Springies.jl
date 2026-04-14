@@ -4,7 +4,7 @@
 
 """
     Pendulum1D{FT} <: Springy{FT}
-    Pendulum1D(; m, c, L, g=FT(9.81), F=ZeroForce(FT))
+    Pendulum1D(m, c, L; g=9.81, F=ZeroForce)
 
 A damped, driven pendulum in 1D. The keyword constructor defaults to `g = 9.81`
 and zero external forcing.
@@ -35,8 +35,8 @@ struct Pendulum1D{FT} <: Springy{FT}
     end
 end
 
-function Pendulum1D(;
-    m::FT, c::FT, L::FT, g::FT=FT(9.81), F::ForceField{FT}=ZeroForce(FT)
+function Pendulum1D(
+    m::FT, c::FT, L::FT; g::FT=FT(9.81), F::ForceField{FT}=ZeroForce(FT)
 ) where {FT<:AbstractFloat}
     return Pendulum1D(m, c, L, g, F)
 end
