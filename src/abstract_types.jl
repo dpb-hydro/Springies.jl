@@ -1,6 +1,6 @@
 # abstract_types.jl
 # Dan Bartley, April 2026
-# Abstract supertype definitions
+# Abstract supertype definitions.
 
 """
     ForceField{FT<:AbstractFloat}

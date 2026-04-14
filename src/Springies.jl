@@ -20,7 +20,7 @@ include("solver.jl")
 #
 # - Each Springy subtype must define differentials!(du, u, p::MySpringy{FT}, t) in differentials.jl
 #
-# - Each ForceField subtype must implement (f::MyForce{FT})(x, y, z, t) in external_forcing.jl
+# - Each ForceField subtype must implement (f::MyForce{FT})(...) in external_forcing.jl
 # ----------------------------------------------------------------------------------------------------------
 
 end # module
