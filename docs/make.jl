@@ -1,11 +1,9 @@
 # This script builds the documentation for Springies.jl
-# To run it, simply enter the project root directory and run:
+# To run it locally, simply enter the project root directory and run:
 #
 # include("docs/make.jl")
 #
 # The docs will be built locally in `Springies.jl/docs/build`. To view them, open `index.html` in your browser.
-#
-# TODO: deploy documentation to GitHub Pages (if project becomes public).
 
 using Documenter
 using Springies
@@ -31,4 +29,8 @@ makedocs(;
             "Initial conditions" => "api/init_particles.md",
         ],
     ],
+)
+
+deploydocs(
+    repo = "github.com/dpb-hydro/Springies.jl.git",
 )
