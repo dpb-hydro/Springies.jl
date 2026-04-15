@@ -23,14 +23,14 @@ makedocs(;
         "Home" => "index.md",
         "Example Gallery" => "examples.md",
         "API Reference" => [
-            "Types" => "api/types.md",
-            "differentials!" => "api/differentials.md",
-            "springy_solve" => "api/solver.md",
+            "System setups" => "api/setups.md",
+            "Differential terms" => "api/differentials.md",
+            "External forcing" => "api/forcing.md",
             "Initial conditions" => "api/init_particles.md",
+            "Solver" => "api/solver.md",
+            "Animation" => "api/animation.md",
         ],
     ],
 )
 
-deploydocs(
-    repo = "github.com/dpb-hydro/Springies.jl.git",
-)
+deploydocs(; repo="github.com/dpb-hydro/Springies.jl.git")

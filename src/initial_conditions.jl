@@ -3,6 +3,15 @@
 # Convenience functions for specifying initial conditions.
 
 """
+    InitialisationMethod
+
+Initialisation method for init_particles. Can either be `Grid()` or `Random()`.
+"""
+abstract type InitialisationMethod end
+struct Grid <: InitialisationMethod end
+struct Random <: InitialisationMethod end
+
+"""
     meshgrid_xy(x, y)
 
 Create grids from coordinates `x` and `y`. 
@@ -16,35 +25,41 @@ function meshgrid_xy(x::AbstractVector, y::AbstractVector)
 end
 
 """
-    init_particles(nx, ny, cx, cy, Ax, Ay; method=:regular)
-    init_particles(n, cx, cy, Ax, Ay; method=:random)
+    init_particles(nx, ny, cx, cy, Ax, Ay; m:InitialisationMethod)
 
 Initialise particle positions either as a regular grid or random placement.
 
 # Arguments
-- `nx`: number of particles along x dimension (`:regular` only)
-- `ny`: number of particles along y dimension (`:regular` only)
-- `n`: total number of particles (`:random` only)
+- `nx`: number of particles along x dimension
+- `ny`: number of particles along y dimension
 - `cx`: x-coordinate centre of particle cluster
 - `cy`: y-coordinate centre of particle cluster
 - `Ax`: extent of particle cluster along x dimension
 - `Ay`: extent of particle cluster along y dimension
-- `method`: `:regular` for grid, `:random` for random placement
+- `m`: `Grid()` for grid, `Random()` for random placement
 """
-function init_particles(args...; method::Symbol)
-    return init_particles(args..., Val(method))
-end
-
 function init_particles(
-    nx::Integer, ny::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, ::Val{:regular}
+    nx::Integer,
+    ny::Integer,
+    cx::Real,
+    cy::Real,
+    Ax::Real,
+    Ay::Real,
+    m::InitialisationMethod,
 )
-    x_grid, y_grid = unit_grid(nx, ny, Val(:regular))
-    return flatten(shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay))
+    x_grid, y_grid = unit_grid(nx, ny, m)
+    x_shifted, y_shifted = shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay)
+    xy_flat = flatten(x_shifted, y_shifted)
+    return xy_flat
 end
 
-function init_particles(n::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, ::Val{:random})
-    x_grid, y_grid = unit_grid(n, 1, Val(:random))
-    return flatten(shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay))
+"""
+    init_particles(n, cx, cy, Ax, Ay m::Random)
+
+Convenience method for placing random particles, providing total number of particles `n` rather than particles in x and y directions.
+"""
+function init_particles(n::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, m::Random)
+    return init_particles(n, 1, cx, cy, Ax, Ay, m)
 end
 
 # ----------------------------------------------------------------------------------------------------------
@@ -70,26 +85,29 @@ function flatten(xgrid::AbstractArray, ygrid::AbstractArray)
 end
 
 """
-    unit_grid(nx, ny, method)
+    unit_grid(nx, ny, ::Grid)
 
-Create two coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
-
-Generation method can either be `:regular` or `:random`.
+Create two regular coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
 """
-function unit_grid(nx::Integer, ny::Integer; method::Symbol)
-    (nx > 0 && ny > 0) ||
-        throw(ArgumentError("nx and ny must be greater than zero, got $nx and $ny"))
-    return unit_grid(nx, ny, Val(method))
-end
-
-function unit_grid(nx::Integer, ny::Integer, ::Val{:regular})
+function unit_grid(nx::Integer, ny::Integer, ::Grid)
+    (nx > 1 && ny > 1) ||
+        throw(ArgumentError("nx and ny must be greater than one, got $nx and $ny"))
     xi = range(-0.5, 0.5; length=nx)
     yi = range(-0.5, 0.5; length=ny)
-    return meshgrid_xy(xi, yi)
+    xy = meshgrid_xy(xi, yi)
+    return xy
 end
 
-function unit_grid(nx::Integer, ny::Integer, ::Val{:random})
-    x = rand(ny, nx) .- 0.5
-    y = rand(ny, nx) .- 0.5
-    return x, y
+"""
+    unit_grid(nx, ny, ::Grid)
+
+Create two random coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
+"""
+function unit_grid(nx::Integer, ny::Integer, ::Random)
+    (nx > 0 && ny > 0) ||
+        throw(ArgumentError("nx and ny must be greater than zero, got $nx and $ny"))
+    xi = rand(ny, nx) .- 0.5
+    yi = rand(ny, nx) .- 0.5
+    xy = xi, yi
+    return xy
 end

@@ -1,6 +1,19 @@
 # external_forcing.jl
 # Dan Bartley, April 2026
-# Concrete type definitions for external forcing.
+# Definitions for external forcing.
+
+# ----------------------------------------------------------------------------------------------------------
+# ABSTRACT SUPERTYPE
+# ----------------------------------------------------------------------------------------------------------
+
+"""
+    ForceField{FT<:AbstractFloat}
+
+Abstract supertype for all externally applied forces.
+
+Subtypes must have corresponding method for `applied_force` which returns value of force at given coordinates.
+"""
+abstract type ForceField{FT<:AbstractFloat} end
 
 # ----------------------------------------------------------------------------------------------------------
 # ZEROFORCE
@@ -8,9 +21,8 @@
 
 """
     ZeroForce{FT} <: ForceField{FT}
-    (f::ZeroForce{FT})(θ, dθ, t)
 
-Absence of external force. Return zero.
+Type for absence of external force.
 
 For use with [`Pendulum1D`](@ref) springies.
 """
@@ -20,7 +32,16 @@ struct ZeroForce{FT} <: ForceField{FT}
     end
 end
 
-(f::ZeroForce{FT})(theta::FT, dtheta::FT, t::FT) where {FT<:AbstractFloat} = zero(FT)
+"""
+    applied_force(::ZeroForce{FT}, theta, dtheta, t)
+
+Return zero.
+"""
+function applied_force(
+    ::ZeroForce{FT}, theta::FT, dtheta::FT, t::FT
+) where {FT<:AbstractFloat}
+    return zero(FT)
+end
 
 # ----------------------------------------------------------------------------------------------------------
 # COSINEFORCE
@@ -28,22 +49,24 @@ end
 
 """
     CosineForce{FT} <: ForceField{FT}
-    (f::CosineForce)(θ, dθ, t)
 
-A time-periodic external force. Return `F0 * cos(ω * t)`.
+Type for a time-periodic external force of form `F0 * cos(ω * t)`.
 
 For use with [`Pendulum1D`](@ref) springies.
-
-# Fields
-- `F0`: Force amplitude
-- `omega`: Angular frequency `ω`
 """
 struct CosineForce{FT} <: ForceField{FT}
     F0::FT
     omega::FT
 end
 
-function (f::CosineForce{FT})(theta::FT, dtheta::FT, t::FT) where {FT<:AbstractFloat}
+"""
+    applied_force(f::CosineForce{FT}, theta, dtheta, t)
+
+Return value of basic cosine wave at time `t`.
+"""
+function applied_force(
+    f::CosineForce{FT}, theta::FT, dtheta::FT, t::FT
+) where {FT<:AbstractFloat}
     return f.F0 * cos(f.omega * t)
 end
 
@@ -53,9 +76,8 @@ end
 
 """
     ClockForce{FT} <: ForceField{FT}
-    (f::ClockForce)(θ, dθ, t)
 
-An external force that is applied only when pendulum is moving outwards and outside a threshold `θc`. Return `F0` when these criteria are met, and zero otherwise.
+Type for a crude clock-style forcing.
 
 For use with [`Pendulum1D`](@ref) springies.
 
@@ -68,7 +90,14 @@ struct ClockForce{FT} <: ForceField{FT}
     thetac::FT
 end
 
-function (f::ClockForce{FT})(theta::FT, dtheta::FT, t::FT) where {FT<:AbstractFloat}
+"""
+    applied_force(f::ClockForce{FT}, theta, dtheta, t)
+
+Return `F0` when pendulum is moving outwards and outside threshold `θc`, zero otherwise.
+"""
+function applied_force(
+    f::ClockForce{FT}, theta::FT, dtheta::FT, t::FT
+) where {FT<:AbstractFloat}
     if abs(theta) >= f.thetac && sign(theta) == sign(dtheta)
         return sign(theta) * f.F0
     else
@@ -82,9 +111,8 @@ end
 
 """
     DoubleGyre{FT} <: ForceField{FT}
-    (f::DoubleGyre)(x, y, t)
 
-The canonical Double Gyre field. Functor returns `[u, v]`, the x and y components of the field, respectively.
+The canonical Double Gyre field. 
 
 # Fields
 - `A`: Velocity magnitude control
@@ -97,23 +125,24 @@ struct DoubleGyre{FT} <: ForceField{FT}
     omega::FT
 end
 
-function (f::DoubleGyre{FT})(x::FT, y::FT, t::FT) where {FT<:AbstractFloat}
-    u = -ForwardDiff.derivative(a -> gyre_stream(f, x, a, t), y)
-    v = ForwardDiff.derivative(b -> gyre_stream(f, b, y, t), x)
-    return [u, v]
-end
-
 """
     gyre_stream(G::DoubleGyre, x::Real, y::Real, t::Real)
     
-(Helper function) Stream function of the Double Gyre field.
-
-# Arguments
-- `G`: a [`DoubleGyre`](@ref) instance
-- `x`, `y`, `t`: coordinate values of x, y, and t
+(Helper function) Stream function of a [`DoubleGyre`](@ref) instance `G`.
 """
 function gyre_stream(G::DoubleGyre, x::Real, y::Real, t::Real) # ::Real is needed as a looser constraint for ForwardDiff
     a = G.e * sin(G.omega * t)
     fx = a * x^2 + (1 - 2a) * x
     return G.A * sin(pi * fx) * sin(pi * y)
+end
+
+"""
+    applied_force(f::DoubleGyre{FT}, x, y, t)
+
+Return components of Double Gyre field in x and y directions.
+"""
+function applied_force(f::DoubleGyre{FT}, x::FT, y::FT, t::FT) where {FT<:AbstractFloat}
+    u = -ForwardDiff.derivative(a -> gyre_stream(f, x, a, t), y)
+    v = ForwardDiff.derivative(b -> gyre_stream(f, b, y, t), x)
+    return u, v
 end

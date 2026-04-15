@@ -1,13 +1,26 @@
 # springy_types.jl
 # Dan Bartley, April 2026
-# Concrete type definitions for Springies.
+# Type definitions for Springies.
+
+# ----------------------------------------------------------------------------------------------------------
+# ABSTRACT SUPERTYPE
+# ----------------------------------------------------------------------------------------------------------
+
+"""
+    Springy{FT<:AbstractFloat}
+
+Abstract supertype for all Springies.
+
+Subtypes must implement `differentials!(du, u, p::MyNewSpringy{FT}, t)`.
+"""
+abstract type Springy{FT<:AbstractFloat} end
 
 # ----------------------------------------------------------------------------------------------------------
 # PENDULUM1D
 # ----------------------------------------------------------------------------------------------------------
 
 """
-    Pendulum1D{FT} <: Springy{FT}
+    Pendulum1D{FT,FF<:ForceField{FT}} <: Springy{FT}
     Pendulum1D(m, c, L; g=9.81, F=ZeroForce)
 
 A damped, driven pendulum in 1D. The keyword constructor defaults to `g = 9.81`
@@ -23,19 +36,19 @@ and zero external forcing.
 - `c_over_m`: Precomputed `c / m`
 - `g_over_L`: Precomputed `g / L`
 """
-struct Pendulum1D{FT} <: Springy{FT}
+struct Pendulum1D{FT,FF<:ForceField{FT}} <: Springy{FT}
     m::FT
     c::FT
     L::FT
     g::FT
-    F::ForceField{FT}
+    F::FF
     mL::FT
     c_over_m::FT
     g_over_L::FT
     function Pendulum1D(
-        m::FT, c::FT, L::FT, g::FT, F::ForceField{FT}
-    ) where {FT<:AbstractFloat}
-        return new{FT}(m, c, L, g, F, m * L, c / m, g / L)
+        m::FT, c::FT, L::FT, g::FT, F::FF
+    ) where {FT<:AbstractFloat,FF<:ForceField{FT}}
+        return new{FT,FF}(m, c, L, g, F, m * L, c / m, g / L)
     end
 end
 
@@ -50,15 +63,15 @@ end
 # ----------------------------------------------------------------------------------------------------------
 
 """
-    FreeParticle2D{FT} <: Springy{FT}
+    FreeParticle2D{FT,FF<:ForceField{FT}} <: Springy{FT}
 
 A massless particle that can be advected in two dimensions by a field.
 
 # Fields
 - `F`: External force field (conceptually this is a velocity field rather than a force field).
 """
-struct FreeParticle2D{FT} <: Springy{FT}
-    F::ForceField{FT}
+struct FreeParticle2D{FT,FF<:ForceField{FT}} <: Springy{FT}
+    F::FF
 end
 
 # ----------------------------------------------------------------------------------------------------------
@@ -66,7 +79,7 @@ end
 # ----------------------------------------------------------------------------------------------------------
 
 """
-    BendyStalk{FT} <: Springy{FT}
+    BendyStalk{FT,FF<:ForceField{FT}} <: Springy{FT}
 
 A linear lumped mass model of a flexible mass-spring system. This is equivalent to two independent springs in the x and y directions.
 
@@ -80,19 +93,19 @@ A linear lumped mass model of a flexible mass-spring system. This is equivalent 
 - `c_over_m`: Precomputed `c / m`
 - `k_over_m`: Precomputed `k / m`
 """
-struct BendyStalk{FT} <: Springy{FT}
+struct BendyStalk{FT,FF<:ForceField{FT}} <: Springy{FT}
     m::FT
     c::FT
     k::FT
     x0::FT
     y0::FT
-    F::ForceField{FT}
+    F::FF
     c_over_m::FT
     k_over_m::FT
     function BendyStalk(
-        m::FT, c::FT, k::FT, x0::FT, y0::FT, F::ForceField{FT}
-    ) where {FT<:AbstractFloat}
-        return new{FT}(m, c, k, x0, y0, F, c / m, k / m)
+        m::FT, c::FT, k::FT, x0::FT, y0::FT, F::FF
+    ) where {FT<:AbstractFloat,FF<:ForceField{FT}}
+        return new{FT,FF}(m, c, k, x0, y0, F, c / m, k / m)
     end
 end
 
