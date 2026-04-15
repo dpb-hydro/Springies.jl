@@ -34,7 +34,8 @@ theta_rad = u_solved[1, :]
 # ----------------------------------------------------------------------------------------------------------
 
 # Animation settings
-savepath = joinpath(@__DIR__, "animations/unforced_pendulum.gif")
+save_animation_as = joinpath(@__DIR__, "animations/unforced_pendulum.gif")
+framedir = make_framedir(save_animation_as) 
 fps = 10
 window = 20.0
 
@@ -43,10 +44,7 @@ t = range(tspan...; length=Nt)     # Time values
 x_bob = L .* sin.(theta_rad)       # Pendulum bob x position
 y_bob = L .- L .* cos.(theta_rad)  # Pendulum bob y position
 theta_deg = rad2deg.(theta_rad)    # Angle in radians
-
-# Animate
-framedir = joinpath(dirname(savepath), "frames")
-mkpath(framedir)
+seis_ylim = 1.05 * max(abs(minimum(theta_deg)), abs(maximum(theta_deg))) # y-limits of plot
 
 fig = Figure(; size=(1200, 600))
 ax1 = Axis(
@@ -64,6 +62,7 @@ ax2 = Axis(
     xticks=0.0:10.0:t[end],
 )
 
+# Initialise observables
 x_bob_obs = Observable(x_bob[1])
 y_bob_obs = Observable(y_bob[1])
 x_rod_obs = Observable([0.0, x_bob[1]])
@@ -72,12 +71,13 @@ t_seis_obs = Observable([t[1]])
 theta_seis_obs = Observable([theta_deg[1]])
 time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
 
-seis_ylim = 1.05 * max(abs(minimum(theta_deg)), abs(maximum(theta_deg)))
-
+# Draw pendulum (ax1)
 text!(ax1, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey) # Time label
 lines!(ax1, [-L * 0.2, L * 0.2], [L, L]; color=:black, linewidth=4)              # Ceiling
 lines!(ax1, x_rod_obs, y_rod_obs; color=:black, linewidth=2)                     # Rod
 scatter!(ax1, x_bob_obs, y_bob_obs; markersize=20, color=:blue)                  # Bob
+
+# Plot graph (ax2)
 lines!(
     ax2,
     t_seis_obs,
@@ -85,14 +85,14 @@ lines!(
     color=:blue,
     linewidth=2,
     label="Full response (numerical)",
-)  # Seismograph
+)
 axislegend(ax2; position=:rt, margin=(10, 10, 10, 10))
 
 Label(fig[0, :], "Damped Pendulum"; fontsize=20, font=:bold)
 colsize!(fig.layout, 1, Relative(0.45))
 colsize!(fig.layout, 2, Relative(0.55))
 
-@info "Saving frames to $framedir"
+@info "Writing frames to $framedir..."
 for i in eachindex(x_bob)
     x_bob_obs[] = x_bob[i]
     y_bob_obs[] = y_bob[i]
@@ -109,16 +109,7 @@ for i in eachindex(x_bob)
     save(joinpath(framedir, @sprintf("frame_%06d.png", i)), fig; px_per_unit=1)
 end
 
-@info "Assembling animation with ffmpeg..."
-# Two passes of ffmpeg: pass 1 = generate palette, pass 2 = encode with palette
-palette = joinpath(dirname(framedir), "palette.png")
-run(
-    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen -update 1 $palette`,
-)
-run(
-    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -i $palette -lavfi paletteuse $savepath`,
-)
+run_ffmpeg(framedir, fps, save_animation_as)
 
 @info "Cleaning up..."
 rm(framedir; recursive=true)
-rm(palette)
