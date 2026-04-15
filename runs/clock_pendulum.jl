@@ -44,7 +44,7 @@ y_bob = L .- L .* cos.(theta_rad)  # Pendulum bob y position
 theta_deg = rad2deg.(theta_rad)    # Angle in radians
 
 # Force arrow for plotting
-F = F_external.(theta_rad, dtheta, 0.0)
+F = Springies.applied_force.(Ref(F_external), theta_rad, dtheta, 0.0)
 F_scale = L / (2 * F0)
 xF = 0.0
 yF = L / 2

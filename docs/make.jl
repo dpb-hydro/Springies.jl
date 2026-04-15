@@ -31,6 +31,4 @@ makedocs(;
     ],
 )
 
-deploydocs(
-    repo = "github.com/dpb-hydro/Springies.jl.git",
-)
+deploydocs(; repo="github.com/dpb-hydro/Springies.jl.git")

@@ -8,7 +8,6 @@ export ZeroForce, CosineForce, ClockForce, DoubleGyre    # External forcing type
 export meshgrid_xy, init_particles                       # Initial condition convenience functions
 export springy_solve                                     # Solver
 
-include("abstract_types.jl")
 include("external_forcing.jl")
 include("springy_types.jl")
 include("differentials.jl")

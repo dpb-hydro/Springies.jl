@@ -58,7 +58,8 @@ ax = Axis(
 x_obs = Observable(xs[:, 1])
 y_obs = Observable(ys[:, 1])
 uv_obs = Observable([
-    G.(xgrid[i, j], ygrid[i, j], t[1]) for i in axes(xgrid, 1), j in axes(xgrid, 2)
+    Springies.applied_force.(Ref(G), xgrid[i, j], ygrid[i, j], t[1]) for
+    i in axes(xgrid, 1), j in axes(xgrid, 2)
 ])
 time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
 
@@ -77,7 +78,10 @@ text!(ax, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey) 
 for i in 1:Nt
     x_obs[] = xs[:, i]
     y_obs[] = ys[:, i]
-    uv = [G.(xgrid[k, l], ygrid[k, l], t[i]) for k in axes(xgrid, 1), l in axes(xgrid, 2)]
+    uv = [
+        Springies.applied_force.(Ref(G), xgrid[k, l], ygrid[k, l], t[i]) for
+        k in axes(xgrid, 1), l in axes(xgrid, 2)
+    ]
     u_obs[] = first.(uv)[:]
     v_obs[] = last.(uv)[:]
     time_obs[] = @sprintf("t = %05.2f s", t[i])
