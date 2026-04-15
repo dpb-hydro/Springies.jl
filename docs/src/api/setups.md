@@ -5,11 +5,13 @@ CollapsedDocStrings = false
 
 # System setups
 
-This page shows how dynamical systems are encoded in `Springies.jl`, and shows the existing setups provided.
+This page shows how dynamical systems are encoded in `Springies.jl`, and shows the existing setup options provided.
 
 ## Overview
 
-Dynamical systems are encoded in `Springies.jl` using `Springy` types, which contain the system parameters and external forcing. Each `Springy` type must have a corresponding `differentials!` function, which describes how the differential terms in the system are computed.
+Dynamical systems are encoded using `Springy` types, which contain the system parameters and external forcing. Each `Springy` type must have a corresponding `differentials!` function, which describes how the differential terms in the system are computed.
+
+External forcing is given to `Springy` instances using `ForceField` types, for which a corresponding `applied_force` function must be defined.
 
 ## Pendulums
 

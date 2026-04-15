@@ -3,10 +3,10 @@ CurrentModule = Springies
 CollapsedDocStrings = false
 ```
 
-# springy_solve
+# Solver
 
-The `springy_solve` function wraps `OrdinaryDiffEq.solve` to solve a dynamical system.
+The `springy_solve` function wraps `OrdinaryDiffEq.solve` to solve the dynamical systems problem:
 
 ```@docs
 springy_solve
-```     
+```

@@ -24,9 +24,11 @@ makedocs(;
         "Example Gallery" => "examples.md",
         "API Reference" => [
             "System setups" => "api/setups.md",
-            "differentials!" => "api/differentials.md",
-            "springy_solve" => "api/solver.md",
+            "Differential terms" => "api/differentials.md",
+            "External forcing" => "api/forcing.md",
             "Initial conditions" => "api/init_particles.md",
+            "Solver" => "api/solver.md",
+            "Animation" => "api/animation.md",
         ],
     ],
 )
