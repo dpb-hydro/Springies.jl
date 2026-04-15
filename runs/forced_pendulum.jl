@@ -6,6 +6,10 @@ using Springies
 using CairoMakie
 using Printf
 
+# ----------------------------------------------------------------------------------------------------------
+# COMPUTATION
+# ----------------------------------------------------------------------------------------------------------
+
 # Pendulum settings
 m = 10.0
 c = 0.7
@@ -25,18 +29,13 @@ t = range(tspan...; length=Nt)
 # Initial conditions [θ, dθ]
 u0 = [deg2rad(-20.0), 0.0]
 
-# Animation settings
-savepath = joinpath(@__DIR__, "animations/forced_pendulum.gif")
-fps = 10
-window = 20.0
-
 # Create pendulum instance
 pendulum = Pendulum1D(m, c, L; F=F_external)
 
 # Solve ODEs
 @info "Solving ODE system..."
 u_solved = springy_solve(pendulum, tspan, u0, Nt)
-theta_rad = [u[1] for u in u_solved]
+theta_rad = u_solved[1, :]
 
 # Derived values for plotting
 x_bob = L .* sin.(theta_rad)       # Pendulum bob x position
@@ -61,9 +60,24 @@ F_scale = L / (2 * F0)
 xF = 0.0
 yF = L / 2
 
-# Animate
-framedir = joinpath(dirname(savepath), "frames")
-mkpath(framedir)
+# ----------------------------------------------------------------------------------------------------------
+# ANIMATION
+# ----------------------------------------------------------------------------------------------------------
+
+# Animation settings
+save_animation_as = joinpath(@__DIR__, "animations/forced_pendulum.gif")
+framedir = make_framedir(save_animation_as)
+fps = 10
+window = 20.0
+
+seis_ylim =
+    1.05 * max(
+        abs(minimum(theta_deg)),
+        abs(maximum(theta_deg)),
+        abs(minimum(theta_steady)),
+        abs(maximum(theta_steady)),
+    )
+
 fig = Figure(; size=(1200, 600))
 ax1 = Axis(
     fig[1, 1];
@@ -80,6 +94,7 @@ ax2 = Axis(
     xticks=0.0:10.0:t[end],
 )
 
+# Initialise observables
 x_bob_obs = Observable(x_bob[1])
 y_bob_obs = Observable(y_bob[1])
 x_rod_obs = Observable([0.0, x_bob[1]])
@@ -92,14 +107,7 @@ t_seis_obs = Observable([t[1]])
 theta_seis_obs = Observable([theta_deg[1]])
 time_obs = Observable(@sprintf("t = %05.2f s", t[1]))
 
-seis_ylim =
-    1.05 * max(
-        abs(minimum(theta_deg)),
-        abs(maximum(theta_deg)),
-        abs(minimum(theta_steady)),
-        abs(maximum(theta_steady)),
-    )
-
+# Draw pendulum (ax1)
 text!(ax1, 0.02, 0.95; text=time_obs, space=:relative, fontsize=14, color=:grey) # Time label
 lines!(ax1, [-L * 0.2, L * 0.2], [L, L]; color=:black, linewidth=4)              # Ceiling
 lines!(ax1, x_rod_obs, y_rod_obs; color=:black, linewidth=2)                     # Rod
@@ -116,6 +124,7 @@ Legend(
     margin=(0, 20.0, 0, 10.0), # (L, R, B, T)
 )
 
+# Plot graph (ax2)
 lines!(ax2, t, theta_steady; color=:orange, linewidth=2, linestyle=:dash)
 lines!(
     ax2,
@@ -144,7 +153,7 @@ Label(fig[0, :], "Forced Damped Pendulum"; fontsize=20, font=:bold)
 colsize!(fig.layout, 1, Relative(0.45))
 colsize!(fig.layout, 2, Relative(0.55))
 
-@info "Saving frames to $framedir"
+@info "Writing frames to $framedir..."
 for i in eachindex(x_bob)
     x_bob_obs[] = x_bob[i]
     y_bob_obs[] = y_bob[i]
@@ -163,16 +172,7 @@ for i in eachindex(x_bob)
     save(joinpath(framedir, @sprintf("frame_%06d.png", i)), fig; px_per_unit=1)
 end
 
-@info "Assembling animation with ffmpeg..."
-# Two passes of ffmpeg: pass 1 = generate palette, pass 2 = encode with palette
-palette = joinpath(dirname(framedir), "palette.png")
-run(
-    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen -update 1 $palette`,
-)
-run(
-    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -i $palette -lavfi paletteuse $savepath`,
-)
+run_ffmpeg(framedir, fps, save_animation_as)
 
 @info "Cleaning up..."
 rm(framedir; recursive=true)
-rm(palette)

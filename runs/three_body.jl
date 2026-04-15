@@ -6,6 +6,10 @@ using Springies
 using CairoMakie
 using Printf
 
+# ----------------------------------------------------------------------------------------------------------
+# COMPUTATION
+# ----------------------------------------------------------------------------------------------------------
+
 # Dimensionless units: G = 1, m = 1
 G = 1.0
 m1 = 1.0
@@ -28,26 +32,28 @@ dx3, dy3 = -1.0, -0.8
 u0 = [x1, y1, dx1, dy1, x2, y2, dx2, dy2, x3, y3, dx3, dy3]
 
 @info "Solving ODE system..."
-u_solved = Springies.springy_solve(S, tspan, u0, Nt)
-xs1 = [u[1] for u in u_solved]
-ys1 = [u[2] for u in u_solved]
-xs2 = [u[5] for u in u_solved]
-ys2 = [u[6] for u in u_solved]
-xs3 = [u[9] for u in u_solved]
-ys3 = [u[10] for u in u_solved]
-
-# Animation
-savepath = joinpath(@__DIR__, "animations/three_body.gif")
-mkpath(dirname(savepath))
-fps = 30
-trail_len = 80  # number of past frames to show as trail
-
-framedir = joinpath(dirname(savepath), "frames")
-mkpath(framedir)
-@info "Saving frames to $framedir"
+u_solved = springy_solve(S, tspan, u0, Nt)
+xs1 = u_solved[1, :]
+ys1 = u_solved[2, :]
+xs2 = u_solved[5, :]
+ys2 = u_solved[6, :]
+xs3 = u_solved[9, :]
+ys3 = u_solved[10, :]
 
 xlim = 1.05 * max(maximum(abs.(xs1)), maximum(abs.(xs2)), maximum(abs.(xs3)))
 ylim = 1.05 * max(maximum(abs.(ys1)), maximum(abs.(ys2)), maximum(abs.(ys3)))
+
+# ----------------------------------------------------------------------------------------------------------
+# ANIMATION
+# ----------------------------------------------------------------------------------------------------------
+
+# Animation settings
+save_animation_as = joinpath(@__DIR__, "animations/three_body.gif")
+framedir = make_framedir(save_animation_as)
+fps = 30
+trail_len = 80  # number of past frames to show as trail
+
+colors = [:cornflowerblue, :tomato, :mediumseagreen]
 
 fig = Figure(; size=(800, 600), backgroundcolor=:black)
 ax = Axis(
@@ -67,7 +73,7 @@ ax = Axis(
 ax.title = "Three-Body Problem"
 ax.titlecolor = :white
 
-colors = [:cornflowerblue, :tomato, :mediumseagreen]
+# Initialise observables
 time_obs = Observable(@sprintf("t = %.2f", t[1]))
 text!(ax, 0.02, 0.96; text=time_obs, space=:relative, fontsize=14, color=:grey60)
 
@@ -93,6 +99,7 @@ scatter!(ax, dot1_x, dot1_y; color=colors[1], markersize=16)
 scatter!(ax, dot2_x, dot2_y; color=colors[2], markersize=16)
 scatter!(ax, dot3_x, dot3_y; color=colors[3], markersize=16)
 
+@info "Writing frames to $framedir..."
 for i in 1:Nt
     i0 = max(1, i - trail_len)
     trail1_x[] = xs1[i0:i]
@@ -111,16 +118,7 @@ for i in 1:Nt
     save(joinpath(framedir, @sprintf("frame_%06d.png", i)), fig; px_per_unit=1)
 end
 
-@info "Assembling animation with ffmpeg..."
-palette = joinpath(dirname(framedir), "palette.png")
-run(
-    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -vf palettegen -update 1 $palette`,
-)
-run(
-    `ffmpeg -y -framerate $fps -i $(joinpath(framedir, "frame_%06d.png")) -i $palette -lavfi paletteuse $savepath`,
-)
+run_ffmpeg(framedir, fps, save_animation_as)
 
 @info "Cleaning up..."
 rm(framedir; recursive=true)
-rm(palette)
-@info "Saved to $savepath"
