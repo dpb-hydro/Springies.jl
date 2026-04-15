@@ -5,6 +5,8 @@ CollapsedDocStrings = true
 
 # Example Gallery
 
+This page contains demos of simulations which can be run with `Springies.jl`. The code used to produce these is available in the `runs` folder in the repo.
+
 ## Unforced pendulums
 
 We can launch a pendulum by dropping it from rest:
