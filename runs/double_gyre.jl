@@ -26,8 +26,8 @@ t = range(tspan...; length=Nt)
 nx, ny = 15, 15    # Number
 xc, yc = 0.5, 0.75 # Centre
 Ax, Ay = 0.1, 0.1  # Extent
-method = :regular # [:regular/:random]
-u0s = init_particles(nx, ny, xc, yc, Ax, Ay; method=method)
+method = Grid() # [Grid()/Random()]
+u0s = init_particles(nx, ny, xc, yc, Ax, Ay, method)
 Np = nx * ny
 
 # Solve ODEs
