@@ -17,7 +17,12 @@ function springy_solve(
     p::Springy{FT}, tspan::Tuple{FT,FT}, u0::Vector{FT}, Nt::Integer
 ) where {FT<:AbstractFloat}
     prob = ODEProblem(differentials!, u0, tspan, p)
-    sol = solve(prob, Tsit5(); reltol=1e-8, abstol=1e-10)
-    sol_interpolated = sol(range(tspan...; length=Nt))
+    sol_interpolated = solve_and_interpolate(prob, tspan, Nt)
     return sol_interpolated
+end
+
+function solve_and_interpolate(prob::ODEProblem, tspan::Tuple{FT,FT}, Nt::Integer) where {FT<:AbstractFloat}
+    sol = solve(prob, Tsit5(); reltol=1e-8, abstol=1e-10)
+    t = range(tspan...; length=Nt)
+    return sol(t)
 end
