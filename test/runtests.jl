@@ -13,8 +13,8 @@ using Aqua
         u0 = [0.0, 0.5]
         Nt = 10
         u_solved = springy_solve(pendulum, tspan, u0, Nt)
-        θ_final = u_solved[end][1]
-        dθ_final = u_solved[end][2]
+        θ_final = u_solved[1, :][end]
+        dθ_final = u_solved[1, :][end]
         @test abs(θ_final) < 1e-4
         @test abs(dθ_final) < 1e-4
     end
@@ -29,9 +29,7 @@ using Aqua
             yc = 0.0
             Ay = 1.0
 
-            method = :regular
-
-            particles = init_particles(nx, ny, xc, yc, Ax, Ay; method=method)
+            particles = init_particles(nx, ny, xc, yc, Ax, Ay, Grid())
 
             r1 = repeat(range(-0.5, 0.5; length=5); inner=5)
             r2 = repeat(reverse(range(-0.5, 0.5; length=5)); outer=5)
