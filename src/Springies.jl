@@ -5,7 +5,7 @@ using ForwardDiff
 
 export Pendulum1D, FreeParticle2D, BendyStalk, ThreeBody # Springy types
 export ZeroForce, CosineForce, ClockForce, DoubleGyre    # External forcing types
-export meshgrid_xy, init_particles                       # Initial condition convenience functions
+export meshgrid_xy, init_particles, Grid, Random         # Initial condition convenience functions
 export springy_solve                                     # Solver
 
 include("external_forcing.jl")

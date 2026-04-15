@@ -2,6 +2,10 @@
 # Dan Bartley, April 2026
 # Convenience functions for specifying initial conditions.
 
+abstract type InitialisationMethod end
+struct Grid <: InitialisationMethod end
+struct Random <: InitialisationMethod end
+
 """
     meshgrid_xy(x, y)
 
@@ -31,20 +35,23 @@ Initialise particle positions either as a regular grid or random placement.
 - `Ay`: extent of particle cluster along y dimension
 - `method`: `:regular` for grid, `:random` for random placement
 """
-function init_particles(args...; method::Symbol)
-    return init_particles(args..., Val(method))
-end
-
 function init_particles(
-    nx::Integer, ny::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, ::Val{:regular}
+    nx::Integer,
+    ny::Integer,
+    cx::Real,
+    cy::Real,
+    Ax::Real,
+    Ay::Real,
+    m::InitialisationMethod,
 )
-    x_grid, y_grid = unit_grid(nx, ny, Val(:regular))
-    return flatten(shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay))
+    x_grid, y_grid = unit_grid(nx, ny, m)
+    x_shifted, y_shifted = shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay)
+    xy_flat = flatten(x_shifted, y_shifted)
+    return xy_flat
 end
 
-function init_particles(n::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, ::Val{:random})
-    x_grid, y_grid = unit_grid(n, 1, Val(:random))
-    return flatten(shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay))
+function init_particles(n::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, m::Random)
+    return init_particles(n, 1, cx, cy, Ax, Ay, m)
 end
 
 # ----------------------------------------------------------------------------------------------------------
@@ -69,27 +76,47 @@ function flatten(xgrid::AbstractArray, ygrid::AbstractArray)
     return permutedims(hcat(xgrid[:], ygrid[:]))
 end
 
-"""
-    unit_grid(nx, ny, method)
+# """
+#     unit_grid(nx, ny, method)
 
-Create two coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
+# Create two coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
 
-Generation method can either be `:regular` or `:random`.
-"""
-function unit_grid(nx::Integer, ny::Integer; method::Symbol)
-    (nx > 0 && ny > 0) ||
-        throw(ArgumentError("nx and ny must be greater than zero, got $nx and $ny"))
-    return unit_grid(nx, ny, Val(method))
-end
+# Generation method can either be `:regular` or `:random`.
+# """
+# function unit_grid(nx::Integer, ny::Integer, ::Grid)
+#     (nx > 1 && ny > 1) ||
+#         throw(ArgumentError("nx and ny must be greater than one, got $nx and $ny"))
+#     xi = range(-0.5, 0.5; length=nx)
+#     yi = range(-0.5, 0.5; length=ny)
+#     return meshgrid_xy(xi, yi)
+# end
 
-function unit_grid(nx::Integer, ny::Integer, ::Val{:regular})
+# function unit_spread(n::Integer, ::Grid)
+#     n <= 0 && throw(ArgumentError("n must be greater than zero, got $n"))
+#     n == 1 && return [0.0]
+#     return range(-0.5, 0.5; length=nx)
+# end
+
+# function unit_spread(n::Integer, ::Random)
+#     n <= 0 && throw(ArgumentError("n must be greater than zero, got $n"))
+#     n == 1 && return [0.0]
+#     return range(-0.5, 0.5; length=nx)
+# end
+
+function unit_grid(nx::Integer, ny::Integer, ::Grid)
+    (nx > 1 && ny > 1) ||
+        throw(ArgumentError("nx and ny must be greater than one, got $nx and $ny"))
     xi = range(-0.5, 0.5; length=nx)
     yi = range(-0.5, 0.5; length=ny)
-    return meshgrid_xy(xi, yi)
+    xy = meshgrid_xy(xi, yi)
+    return xy
 end
 
-function unit_grid(nx::Integer, ny::Integer, ::Val{:random})
-    x = rand(ny, nx) .- 0.5
-    y = rand(ny, nx) .- 0.5
-    return x, y
+function unit_grid(nx::Integer, ny::Integer, ::Random)
+    (nx > 0 && ny > 0) ||
+        throw(ArgumentError("nx and ny must be greater than zero, got $nx and $ny"))
+    xi = rand(ny, nx) .- 0.5
+    yi = rand(ny, nx) .- 0.5
+    xy = xi, yi
+    return xy
 end
