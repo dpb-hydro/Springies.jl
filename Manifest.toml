@@ -1373,7 +1373,7 @@ version = "2.7.2"
     ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
 
 [[deps.Springies]]
-deps = ["DiffEqBase", "ForwardDiff", "OrdinaryDiffEq", "Printf", "StaticArrays"]
+deps = ["DiffEqBase", "ForwardDiff", "OrdinaryDiffEq"]
 path = "."
 uuid = "df417c55-a893-40e7-b28a-78ce8be48996"
 version = "0.1.0"
