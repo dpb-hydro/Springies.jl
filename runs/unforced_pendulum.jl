@@ -6,34 +6,40 @@ using Springies
 using CairoMakie
 using Printf
 
-# Pendulum settings
+# ----------------------------------------------------------------------------------------------------------
+# COMPUTATION
+# ----------------------------------------------------------------------------------------------------------
+
+# Initialise pendulum
 m = 10.0
 c = 0.7
 L = 5.0
+pendulum = Pendulum1D(m, c, L)
 
 # Time settings
 tspan = (0.0, 100.0)
 Nt = 376
-t = range(tspan...; length=Nt)
 
 # Initial conditions [θ, dθ]
 # u0 = [deg2rad(-20.0), 0.0] # Release by dropping
 u0 = [0.0, 0.5]              # Release by launching
+
+# Solve ODEs
+@info "Solving ODE system..."
+u_solved = springy_solve(pendulum, tspan, u0, Nt)
+theta_rad = u_solved[1, :]
+
+# ----------------------------------------------------------------------------------------------------------
+# ANIMATION
+# ----------------------------------------------------------------------------------------------------------
 
 # Animation settings
 savepath = joinpath(@__DIR__, "animations/unforced_pendulum.gif")
 fps = 10
 window = 20.0
 
-# Create pendulum instance
-pendulum = Pendulum1D(m, c, L)
-
-# Solve ODEs
-@info "Solving ODE system..."
-u_solved = springy_solve(pendulum, tspan, u0, Nt)
-theta_rad = [u[1] for u in u_solved]
-
 # Derived values for plotting
+t = range(tspan...; length=Nt)     # Time values
 x_bob = L .* sin.(theta_rad)       # Pendulum bob x position
 y_bob = L .- L .* cos.(theta_rad)  # Pendulum bob y position
 theta_deg = rad2deg.(theta_rad)    # Angle in radians
@@ -41,6 +47,7 @@ theta_deg = rad2deg.(theta_rad)    # Angle in radians
 # Animate
 framedir = joinpath(dirname(savepath), "frames")
 mkpath(framedir)
+
 fig = Figure(; size=(1200, 600))
 ax1 = Axis(
     fig[1, 1];
