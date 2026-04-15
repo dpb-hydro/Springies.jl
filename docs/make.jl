@@ -23,7 +23,7 @@ makedocs(;
         "Home" => "index.md",
         "Example Gallery" => "examples.md",
         "API Reference" => [
-            "Types" => "api/types.md",
+            "System setups" => "api/setups.md",
             "differentials!" => "api/differentials.md",
             "springy_solve" => "api/solver.md",
             "Initial conditions" => "api/init_particles.md",

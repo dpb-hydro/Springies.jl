@@ -20,7 +20,7 @@ abstract type Springy{FT<:AbstractFloat} end
 # ----------------------------------------------------------------------------------------------------------
 
 """
-    Pendulum1D{FT} <: Springy{FT}
+    Pendulum1D{FT,FF<:ForceField{FT}} <: Springy{FT}
     Pendulum1D(m, c, L; g=9.81, F=ZeroForce)
 
 A damped, driven pendulum in 1D. The keyword constructor defaults to `g = 9.81`
@@ -63,7 +63,7 @@ end
 # ----------------------------------------------------------------------------------------------------------
 
 """
-    FreeParticle2D{FT} <: Springy{FT}
+    FreeParticle2D{FT,FF<:ForceField{FT}} <: Springy{FT}
 
 A massless particle that can be advected in two dimensions by a field.
 
@@ -79,7 +79,7 @@ end
 # ----------------------------------------------------------------------------------------------------------
 
 """
-    BendyStalk{FT} <: Springy{FT}
+    BendyStalk{FT,FF<:ForceField{FT}} <: Springy{FT}
 
 A linear lumped mass model of a flexible mass-spring system. This is equivalent to two independent springs in the x and y directions.
 

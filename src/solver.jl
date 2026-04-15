@@ -8,7 +8,7 @@
 Wrapper of `OrdinaryDiffEq.solve`. Solve the ODE system defined by the Springy `p` and its corresponding `differentials!` function. Return the solution interpolated onto a uniform time grid.
 
 # Arguments
-- `p`: Springy object
+- `p`: Springy instance
 - `tspan`: Start and end times `(t0, t1)`
 - `u0`: Initial state vector
 - `Nt`: Number of time points in the output grid
@@ -22,14 +22,7 @@ function springy_solve(
 end
 
 """
-    springy_solve(p::Springy{FT}, tspan::Tuple{FT,FT}, u0::Vector{FT}, Nt::Integer) where {FT<:AbstractFloat}
-
-Wrapper of `OrdinaryDiffEq.solve`. Solve the ODE system defined by the Springy `p` and its corresponding `differentials!` function. Return the solution interpolated onto a uniform time grid.
-
-# Arguments
-- `p`: Springy object
-- `tspan`: Start and end times `(t0, t1)`
-- `u0`: Initial state vector
+    solve_and_interpolate(prob::ODEProblem, Nt)
 
 Barrier function to isolate type instability arising from ODEProblem construction.
 """

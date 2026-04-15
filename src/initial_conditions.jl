@@ -2,6 +2,11 @@
 # Dan Bartley, April 2026
 # Convenience functions for specifying initial conditions.
 
+"""
+    InitialisationMethod
+
+Initialisation method for init_particles. Can either be `Grid()` or `Random()`.
+"""
 abstract type InitialisationMethod end
 struct Grid <: InitialisationMethod end
 struct Random <: InitialisationMethod end
@@ -20,20 +25,18 @@ function meshgrid_xy(x::AbstractVector, y::AbstractVector)
 end
 
 """
-    init_particles(nx, ny, cx, cy, Ax, Ay; method=:regular)
-    init_particles(n, cx, cy, Ax, Ay; method=:random)
+    init_particles(nx, ny, cx, cy, Ax, Ay; m:InitialisationMethod)
 
 Initialise particle positions either as a regular grid or random placement.
 
 # Arguments
-- `nx`: number of particles along x dimension (`:regular` only)
-- `ny`: number of particles along y dimension (`:regular` only)
-- `n`: total number of particles (`:random` only)
+- `nx`: number of particles along x dimension
+- `ny`: number of particles along y dimension
 - `cx`: x-coordinate centre of particle cluster
 - `cy`: y-coordinate centre of particle cluster
 - `Ax`: extent of particle cluster along x dimension
 - `Ay`: extent of particle cluster along y dimension
-- `method`: `:regular` for grid, `:random` for random placement
+- `m`: `Grid()` for grid, `Random()` for random placement
 """
 function init_particles(
     nx::Integer,
@@ -50,6 +53,11 @@ function init_particles(
     return xy_flat
 end
 
+"""
+    init_particles(n, cx, cy, Ax, Ay m::Random)
+
+Convenience method for placing random particles, providing total number of particles `n` rather than particles in x and y directions.
+"""
 function init_particles(n::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, m::Random)
     return init_particles(n, 1, cx, cy, Ax, Ay, m)
 end
@@ -76,33 +84,11 @@ function flatten(xgrid::AbstractArray, ygrid::AbstractArray)
     return permutedims(hcat(xgrid[:], ygrid[:]))
 end
 
-# """
-#     unit_grid(nx, ny, method)
+"""
+    unit_grid(nx, ny, ::Grid)
 
-# Create two coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
-
-# Generation method can either be `:regular` or `:random`.
-# """
-# function unit_grid(nx::Integer, ny::Integer, ::Grid)
-#     (nx > 1 && ny > 1) ||
-#         throw(ArgumentError("nx and ny must be greater than one, got $nx and $ny"))
-#     xi = range(-0.5, 0.5; length=nx)
-#     yi = range(-0.5, 0.5; length=ny)
-#     return meshgrid_xy(xi, yi)
-# end
-
-# function unit_spread(n::Integer, ::Grid)
-#     n <= 0 && throw(ArgumentError("n must be greater than zero, got $n"))
-#     n == 1 && return [0.0]
-#     return range(-0.5, 0.5; length=nx)
-# end
-
-# function unit_spread(n::Integer, ::Random)
-#     n <= 0 && throw(ArgumentError("n must be greater than zero, got $n"))
-#     n == 1 && return [0.0]
-#     return range(-0.5, 0.5; length=nx)
-# end
-
+Create two regular coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
+"""
 function unit_grid(nx::Integer, ny::Integer, ::Grid)
     (nx > 1 && ny > 1) ||
         throw(ArgumentError("nx and ny must be greater than one, got $nx and $ny"))
@@ -112,6 +98,11 @@ function unit_grid(nx::Integer, ny::Integer, ::Grid)
     return xy
 end
 
+"""
+    unit_grid(nx, ny, ::Grid)
+
+Create two random coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
+"""
 function unit_grid(nx::Integer, ny::Integer, ::Random)
     (nx > 0 && ny > 0) ||
         throw(ArgumentError("nx and ny must be greater than zero, got $nx and $ny"))
