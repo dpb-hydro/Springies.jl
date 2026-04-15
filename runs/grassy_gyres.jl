@@ -32,10 +32,10 @@ nx, ny = 41, 21    # Number
 Np = nx * ny
 xc, yc = 1.0, 0.5  # Centre
 Ax, Ay = 2.0, 1.0  # Extent
-# method = :regular # [:regular/:random]
-# xy0 = init_particles(nx, ny, xc, yc, Ax, Ay; method=method)
-method = :random # [:regular/:random]
-xy0 = init_particles(Np, xc, yc, Ax, Ay; method=method)
+method = Grid() # [Grid()/Random()]
+xy0 = init_particles(nx, ny, xc, yc, Ax, Ay, method)
+# method = Random() # [Grid()/Random()]
+# xy0 = init_particles(Np, xc, yc, Ax, Ay, method)
 x0 = xy0[1, :]
 y0 = xy0[2, :]
 u0s = [x0'; zeros(Np)'; y0'; zeros(Np)']
