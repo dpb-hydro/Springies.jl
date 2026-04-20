@@ -2,7 +2,7 @@
 
 julia_version = "1.12.5"
 manifest_format = "2.0"
-project_hash = "bafca03277e8bcf65dae20b61d0f0233c1847582"
+project_hash = "d4450c999827f5a575cefe83b1f6fc11873031a9"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "f7304359109c768cf32dc5fa2d371565bb63b68a"
@@ -1373,10 +1373,10 @@ version = "2.7.2"
     ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
 
 [[deps.Springies]]
-deps = ["DiffEqBase", "ForwardDiff", "OrdinaryDiffEq"]
+deps = ["ForwardDiff", "OrdinaryDiffEq"]
 path = "."
 uuid = "df417c55-a893-40e7-b28a-78ce8be48996"
-version = "0.1.0"
+version = "0.2.0"
 
 [[deps.Static]]
 deps = ["CommonWorldInvalidations", "IfElse", "PrecompileTools", "SciMLPublic"]
