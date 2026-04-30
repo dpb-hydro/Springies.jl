@@ -35,7 +35,7 @@ theta_rad = u_solved[1, :]
 
 # Animation settings
 save_animation_as = joinpath(@__DIR__, "animations/unforced_pendulum.gif")
-framedir = make_framedir(save_animation_as) 
+framedir = make_framedir(save_animation_as)
 fps = 10
 window = 20.0
 
