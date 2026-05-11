@@ -21,10 +21,8 @@ abstract type Springy{FT<:AbstractFloat} end
 
 """
     Pendulum1D{FT,FF<:ForceField{FT}} <: Springy{FT}
-    Pendulum1D(m, c, L; g=9.81, F=ZeroForce)
-
-A damped, driven pendulum in 1D. The keyword constructor defaults to `g = 9.81`
-and zero external forcing.
+    
+A damped, driven pendulum in 1D. 
 
 # Fields
 - `m`: Mass
@@ -36,7 +34,7 @@ and zero external forcing.
 - `c_over_m`: Precomputed `c / m`
 - `g_over_L`: Precomputed `g / L`
 """
-struct Pendulum1D{FT,FF<:ForceField{FT}} <: Springy{FT}
+struct Pendulum1D{FT<:AbstractFloat,FF<:ForceField{FT}} <: Springy{FT}
     m::FT
     c::FT
     L::FT
@@ -52,6 +50,11 @@ struct Pendulum1D{FT,FF<:ForceField{FT}} <: Springy{FT}
     end
 end
 
+"""
+    Pendulum1D(m, c, L; g=9.81, F=ZeroForce)
+    
+Constructor for `Pendulum1D` defaulting to `g=9.81` and zero external force.
+"""
 function Pendulum1D(
     m::FT, c::FT, L::FT; g::FT=FT(9.81), F::ForceField{FT}=ZeroForce(FT)
 ) where {FT<:AbstractFloat}
@@ -70,7 +73,7 @@ A massless particle that can be advected in two dimensions by a field.
 # Fields
 - `F`: External force field (conceptually this is a velocity field rather than a force field).
 """
-struct FreeParticle2D{FT,FF<:ForceField{FT}} <: Springy{FT}
+struct FreeParticle2D{FT<:AbstractFloat,FF<:ForceField{FT}} <: Springy{FT}
     F::FF
 end
 
@@ -81,7 +84,7 @@ end
 """
     BendyStalk{FT,FF<:ForceField{FT}} <: Springy{FT}
 
-A linear lumped mass model of a flexible mass-spring system. This is equivalent to two independent springs in the x and y directions.
+A linear lumped mass model of a flexible mass-spring system. This is equivalent to two independent springs in the `x` and `y` directions.
 
 # Fields
 - `m`: Mass
@@ -93,7 +96,7 @@ A linear lumped mass model of a flexible mass-spring system. This is equivalent 
 - `c_over_m`: Precomputed `c / m`
 - `k_over_m`: Precomputed `k / m`
 """
-struct BendyStalk{FT,FF<:ForceField{FT}} <: Springy{FT}
+struct BendyStalk{FT<:AbstractFloat,FF<:ForceField{FT}} <: Springy{FT}
     m::FT
     c::FT
     k::FT
@@ -124,7 +127,7 @@ The canonical Three-body Problem.
 - `m3`: Mass of particle 3
 - `G`: Gravitational constant
 """
-struct ThreeBody{FT} <: Springy{FT}
+struct ThreeBody{FT<:AbstractFloat} <: Springy{FT}
     m1::FT
     m2::FT
     m3::FT

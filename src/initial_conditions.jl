@@ -5,10 +5,22 @@
 """
     InitialisationMethod
 
-Initialisation method for init_particles. Can either be `Grid()` or `Random()`.
+Initialisation method for `init_particles`; can either be `Grid()` or `Random()`.
 """
 abstract type InitialisationMethod end
+
+"""
+    Grid <: InitialisationMethod
+
+Initialisation method for a regular grid of particles.
+"""
 struct Grid <: InitialisationMethod end
+
+"""
+    Random <: InitialisationMethod
+
+Initialisation method for a random arrangement of particles.
+"""
 struct Random <: InitialisationMethod end
 
 """
@@ -39,14 +51,8 @@ Initialise particle positions either as a regular grid or random placement.
 - `m`: `Grid()` for grid, `Random()` for random placement
 """
 function init_particles(
-    nx::Integer,
-    ny::Integer,
-    cx::Real,
-    cy::Real,
-    Ax::Real,
-    Ay::Real,
-    m::InitialisationMethod,
-)
+    nx::Int, ny::Int, cx::FT, cy::FT, Ax::FT, Ay::FT, m::InitialisationMethod
+) where {FT<:AbstractFloat}
     x_grid, y_grid = unit_grid(nx, ny, m)
     x_shifted, y_shifted = shift_scale(x_grid, cx, Ax), shift_scale(y_grid, cy, Ay)
     xy_flat = flatten(x_shifted, y_shifted)
@@ -54,11 +60,13 @@ function init_particles(
 end
 
 """
-    init_particles(n, cx, cy, Ax, Ay m::Random)
+    init_particles(n, cx, cy, Ax, Ay, m::Random)
 
 Convenience method for placing random particles, providing total number of particles `n` rather than particles in x and y directions.
 """
-function init_particles(n::Integer, cx::Real, cy::Real, Ax::Real, Ay::Real, m::Random)
+function init_particles(
+    n::Int, cx::FT, cy::FT, Ax::FT, Ay::FT, m::Random
+) where {FT<:AbstractFloat}
     return init_particles(n, 1, cx, cy, Ax, Ay, m)
 end
 
@@ -71,7 +79,9 @@ end
 
 Move a collection of points to a new origin `x0` and scale by `A`.
 """
-function shift_scale(collection::Array, x0::Real, A::Real)
+function shift_scale(
+    collection::AbstractArray{FT,N}, x0::FT, A::FT
+) where {FT<:AbstractFloat,N}
     return x0 .+ A .* collection
 end
 
@@ -80,18 +90,21 @@ end
 
 Create a `(2, N)` array of particle coordinates, with `x` on the first row and `y` on the second.
 """
-function flatten(xgrid::AbstractArray, ygrid::AbstractArray)
+function flatten(
+    xgrid::AbstractArray{FT,N}, ygrid::AbstractArray{FT,N}
+) where {FT<:AbstractFloat,N}
     return permutedims(hcat(xgrid[:], ygrid[:]))
 end
 
 """
     unit_grid(nx, ny, ::Grid)
 
-Create two regular coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
+Create two regular coordinate grids of size (`ny`, `nx`) where elements are between `-0.5` and `0.5`.
 """
-function unit_grid(nx::Integer, ny::Integer, ::Grid)
-    (nx > 1 && ny > 1) ||
-        throw(ArgumentError("nx and ny must be greater than one, got $nx and $ny"))
+function unit_grid(nx::Int, ny::Int, ::Grid)
+    (nx > 1 && ny > 1) || throw(
+        ArgumentError("unit_grid: nx and ny must be greater than one, got $nx and $ny")
+    )
     xi = range(-0.5, 0.5; length=nx)
     yi = range(-0.5, 0.5; length=ny)
     xy = meshgrid_xy(xi, yi)
@@ -101,11 +114,12 @@ end
 """
     unit_grid(nx, ny, ::Grid)
 
-Create two random coordinate grids of size (`ny`, `nx`) where elements are between -0.5 and 0.5.
+Create two random coordinate grids of size (`ny`, `nx`) where elements are between `-0.5` and `0.5`.
 """
-function unit_grid(nx::Integer, ny::Integer, ::Random)
-    (nx > 0 && ny > 0) ||
-        throw(ArgumentError("nx and ny must be greater than zero, got $nx and $ny"))
+function unit_grid(nx::Int, ny::Int, ::Random)
+    (nx > 0 && ny > 0) || throw(
+        ArgumentError("unit_grid: nx and ny must be greater than zero, got $nx and $ny")
+    )
     xi = rand(ny, nx) .- 0.5
     yi = rand(ny, nx) .- 0.5
     xy = xi, yi

@@ -26,7 +26,7 @@ end
 
 Barrier function to isolate type instability arising from ODEProblem construction.
 """
-function solve_and_interpolate(prob::ODEProblem, Nt::Integer)
+function solve_and_interpolate(prob::ODEProblem, Nt::Int)
     sol = solve(prob, Tsit5(); reltol=1e-8, abstol=1e-10)
     t = range(prob.tspan...; length=Nt)
     return sol(t)

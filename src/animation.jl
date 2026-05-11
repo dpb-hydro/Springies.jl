@@ -21,7 +21,7 @@ Run ffmpeg to assemble frames into a gif animation.
 ffmpeg is run twice: pass 1 = generate palette, pass 2 = encode with palette
 """
 function run_ffmpeg(
-    framedir::String, fps::Integer, save_as::String; naming::String="frame_%06d.png"
+    framedir::String, fps::Int, save_as::String; naming::String="frame_%06d.png"
 )
     @info "Assembling animation with ffmpeg..."
     palette = joinpath(dirname(framedir), "palette.png")
