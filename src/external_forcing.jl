@@ -24,9 +24,9 @@ abstract type ForceField{FT<:AbstractFloat} end
 
 Type for absence of external force.
 
-For use with [`Pendulum1D`](@ref) springies.
+For use with `Pendulum1D` springies.
 """
-struct ZeroForce{FT} <: ForceField{FT}
+struct ZeroForce{FT<:AbstractFloat} <: ForceField{FT}
     function ZeroForce(::Type{FT}) where {FT<:AbstractFloat}
         return new{FT}()
     end
@@ -52,9 +52,9 @@ end
 
 Type for a time-periodic external force of form `F0 * cos(ω * t)`.
 
-For use with [`Pendulum1D`](@ref) springies.
+For use with `Pendulum1D` springies.
 """
-struct CosineForce{FT} <: ForceField{FT}
+struct CosineForce{FT<:AbstractFloat} <: ForceField{FT}
     F0::FT
     omega::FT
 end
@@ -64,9 +64,7 @@ end
 
 Return value of basic cosine wave at time `t`.
 """
-function applied_force(
-    f::CosineForce{FT}, theta::FT, dtheta::FT, t::FT
-) where {FT<:AbstractFloat}
+function applied_force(f::CosineForce{FT}, ::FT, ::FT, t::FT) where {FT<:AbstractFloat}
     return f.F0 * cos(f.omega * t)
 end
 
@@ -77,15 +75,11 @@ end
 """
     ClockForce{FT} <: ForceField{FT}
 
-Type for a crude clock-style forcing.
+Type for a crude clock-style forcing (`F0` when pendulum is moving outwards and outside threshold `θc`, zero otherwise).
 
-For use with [`Pendulum1D`](@ref) springies.
-
-# Fields
-- `F0`: Force amplitude
-- `θc`: Position threshold
+For use with `Pendulum1D` springies.
 """
-struct ClockForce{FT} <: ForceField{FT}
+struct ClockForce{FT<:AbstractFloat} <: ForceField{FT}
     F0::FT
     thetac::FT
 end
@@ -96,13 +90,10 @@ end
 Return `F0` when pendulum is moving outwards and outside threshold `θc`, zero otherwise.
 """
 function applied_force(
-    f::ClockForce{FT}, theta::FT, dtheta::FT, t::FT
+    f::ClockForce{FT}, theta::FT, dtheta::FT, ::FT
 ) where {FT<:AbstractFloat}
-    if abs(theta) >= f.thetac && sign(theta) == sign(dtheta)
-        return sign(theta) * f.F0
-    else
-        return zero(FT)
-    end
+    (abs(theta) >= f.thetac && sign(theta) == sign(dtheta)) && return sign(theta) * f.F0
+    return zero(FT)
 end
 
 # ----------------------------------------------------------------------------------------------------------
@@ -119,16 +110,16 @@ The canonical Double Gyre field.
 - `e`: Wobble size control
 - `omega`: Wobble angular frequency
 """
-struct DoubleGyre{FT} <: ForceField{FT}
+struct DoubleGyre{FT<:AbstractFloat} <: ForceField{FT}
     A::FT
     e::FT
     omega::FT
 end
 
 """
-    gyre_stream(G::DoubleGyre, x::Real, y::Real, t::Real)
+    gyre_stream(G::DoubleGyre, x, y, t)
     
-(Helper function) Stream function of a [`DoubleGyre`](@ref) instance `G`.
+(Helper function) Stream function of a `DoubleGyre` instance `G`.
 """
 function gyre_stream(G::DoubleGyre, x::Real, y::Real, t::Real) # ::Real is needed as a looser constraint for ForwardDiff
     a = G.e * sin(G.omega * t)
@@ -139,7 +130,7 @@ end
 """
     applied_force(f::DoubleGyre{FT}, x, y, t)
 
-Return components of Double Gyre field in x and y directions.
+Return components of Double Gyre field in `x` and `y` directions.
 """
 function applied_force(f::DoubleGyre{FT}, x::FT, y::FT, t::FT) where {FT<:AbstractFloat}
     u = -ForwardDiff.derivative(a -> gyre_stream(f, x, a, t), y)
