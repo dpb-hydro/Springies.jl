@@ -11,3 +11,10 @@ CollapsedDocStrings = false
 meshgrid_xy
 init_particles
 ```
+
+The initialisation method can be selected with subtypes of `InitialisationMethod`:
+
+```@docs
+Grid
+Random
+```
